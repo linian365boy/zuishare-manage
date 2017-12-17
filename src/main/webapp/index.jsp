@@ -1,5 +1,10 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<body>
-<h2>Hello World!</h2>
-</body>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>最分享 | 分享身边最好的东西 | 后台管理系统</title>
+</head>
+<body><%response.sendRedirect("/admin");%></body>
 </html>

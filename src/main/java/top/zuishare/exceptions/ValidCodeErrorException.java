@@ -1,4 +1,4 @@
-package top.zuishare.security;
+package top.zuishare.exceptions;
 
 import org.springframework.security.core.AuthenticationException;
 

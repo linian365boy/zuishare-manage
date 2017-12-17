@@ -45,7 +45,7 @@ public class AdvertisementController {
 	private final static Logger logger = LoggerFactory.getLogger(AdvertisementController.class);
 	
 	@RequestMapping(value={"/ads/list"})
-	public String list(HttpServletRequest request,ModelMap map){
+	public String list(ModelMap map){
 		map.put("ajaxListUrl", "admin/ad/ads/getJsonList");
 		return "admin/ad/list";
 	}

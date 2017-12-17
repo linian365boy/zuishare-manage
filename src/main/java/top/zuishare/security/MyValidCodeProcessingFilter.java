@@ -5,6 +5,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import top.zuishare.exceptions.ValidCodeErrorException;
+import top.zuishare.util.ValidateCodeHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +42,7 @@ public class MyValidCodeProcessingFilter extends AbstractAuthenticationProcessin
 		if (StringUtils.isBlank(validCode)) {
             throw new ValidCodeErrorException("验证码为空!");
         }
-        if (!ValidateCodeHandle.matchCode(request, validCode)) {
+        if (!ValidateCodeHandler.matchCode(request, validCode)) {
             throw new ValidCodeErrorException("验证码错误!");
         }
 	}

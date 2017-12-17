@@ -36,14 +36,14 @@ public class WebSecurityConfig extends AbstractSecurityWebApplicationInitializer
     @Order(1)
 	public class FrontendWebSecurityConfigureAdapter extends WebSecurityConfigurerAdapter {
 		@Autowired
-		private MyValidCodeProcessingFilter MyValidCodeProcessingFilter;
+		private MyValidCodeProcessingFilter myValidCodeProcessingFilter;
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.csrf().disable().authorizeRequests()
 				.antMatchers("/admin/login","/admin/accessDenied","/admin/invalidate","/admin/logout").permitAll()
 				.antMatchers("/admin/**").authenticated()
 				.and()
-				.addFilterBefore(MyValidCodeProcessingFilter, UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(myValidCodeProcessingFilter, UsernamePasswordAuthenticationFilter.class)
 				.formLogin()
 				.loginPage("/admin/login")
 				.defaultSuccessUrl("/admin/index")
@@ -79,9 +79,9 @@ public class WebSecurityConfig extends AbstractSecurityWebApplicationInitializer
     }
 	
 	@Bean
-    public MyValidCodeProcessingFilter myValidCodeProcessingFilter(AuthenticationManager authenticationManager) {
+    public MyValidCodeProcessingFilter myValidCodeProcessingFilter() {
         MyValidCodeProcessingFilter filter = new MyValidCodeProcessingFilter();
-        filter.setAuthenticationManager(authenticationManager);
+        filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(frontAuthenticationSuccessHandler());
         filter.setAuthenticationFailureHandler(frontAuthenticationFailureHandler());
         return filter;

@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.5.3.RELEASE</version>
+    <version>1.5.8.RELEASE</version>
   </parent>
 
   <dependencies>
@@ -40,6 +40,11 @@
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-logging</artifactId>
         </exclusion>
+        <!-- 移除嵌入式tomcat插件 -->
+          <!--<exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+          </exclusion>-->
       </exclusions>
     </dependency>
 
@@ -156,18 +161,6 @@
       <version>${tiles.version}</version>
     </dependency>
 
-    <!-- return json
-    <dependency>
-      <groupId>com.rainier.permission</groupId>
-      <artifactId>auth_core</artifactId>
-      <version>1.1.0-SNAPSHOT</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>servlet-api</artifactId>
-          <groupId>org.mortbay.jetty</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>-->
     <dependency>
       <groupId>com.github.penggle</groupId>
       <artifactId>kaptcha</artifactId>
@@ -215,6 +208,13 @@
       <artifactId>zuishare-spi</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -248,8 +248,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.1</version>
           <configuration>
-            <source>1.7</source>
-            <target>1.7</target>
+            <source>1.8</source>
+            <target>1.8</target>
           </configuration>
         </plugin>
         <plugin>
@@ -285,7 +285,7 @@
       </activation>
     </profile>
     <profile>
-      <id>prf</id>
+      <id>prd</id>
       <properties>
         <env>prd</env>
       </properties>

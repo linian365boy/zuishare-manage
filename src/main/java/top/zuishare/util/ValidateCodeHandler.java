@@ -1,14 +1,13 @@
-package top.zuishare.security;
+package top.zuishare.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.zuishare.util.Constant;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class ValidateCodeHandle {
+public class ValidateCodeHandler {
 	
-	private static Logger logger = LoggerFactory.getLogger(ValidateCodeHandle.class);
+	private static Logger logger = LoggerFactory.getLogger(ValidateCodeHandler.class);
 	
 	public static boolean matchCode(HttpServletRequest request, String inputCode) {
 		String code = (String)request.getSession().getAttribute(Constant.LOGIN_VERIFY_CODE_KEY);

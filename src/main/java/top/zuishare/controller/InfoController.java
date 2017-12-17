@@ -77,9 +77,7 @@ public class InfoController {
 	
 	@RequestMapping(value="/{infoId}/update",method= RequestMethod.GET)
 	public String update(@PathVariable Integer infoId, Model model) {
-		if (infoId != null) {
-			model.addAttribute("model",infoService.loadOne(infoId));
-		}
+		model.addAttribute("model",infoService.loadOne(infoId));
 		return "admin/sys/info/update";
 	}
 	
