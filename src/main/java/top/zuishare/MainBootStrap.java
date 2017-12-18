@@ -25,10 +25,6 @@ public class MainBootStrap extends SpringBootServletInitializer {
 	}
 	
 	public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(MainBootStrap.class, args);
-        String[] activeProfiles = ctx.getEnvironment().getActiveProfiles();
-        for (String profile : activeProfiles) {
-            logger.warn("Spring Boot use {} profile" , profile);
-        }
+        SpringApplication.run(MainBootStrap.class, args);
     }
 }

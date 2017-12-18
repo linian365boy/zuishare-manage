@@ -11,18 +11,18 @@ conf.web:
   indexNewsSize: 8
 #company desc length
   companyLength: 500
-  from: @conf.email.from@
-  to: @conf.email.to@
+  from: ${conf.email.from}
+  to: ${conf.email.to}
 #generationed static page local path
-  htmlPath: @html.path@
+  htmlPath: ${html.path}
 #upload pic local path
-  picPath: @pic.path@
+  picPath: ${pic.path}
 #company config file local path, avoid classes build override
-  companyConfigPath: @companyConfig.path@
+  companyConfigPath: ${companyConfig.path}
 #web config file local path, avoid classes build override
-  webConfigPath: @webConfig.path@
+  webConfigPath: ${webConfig.path}
 #static resources access path
-  staticAceessUrl: @static.accessPath@	
+  staticAceessUrl: ${static.accessPath}
 
 #mybatis
 mybatis: 
@@ -32,9 +32,9 @@ mybatis:
 spring: 
   datasource:
     druid:
-      url: @jdbc.url@
-      username: @jdbc.username@
-      password: @jdbc.password@
+      url: ${jdbc.url}
+      username: ${jdbc.username}
+      password: ${jdbc.password}
       driver-class-name: com.mysql.jdbc.Driver
       initial-size: 5
       max-active: 8
@@ -58,8 +58,7 @@ spring:
   aop:
     proxy-target-class: true
   profiles:
-    avtive: @env@
-    include: @env@
+    active: win_local
   mvc:
     view: 
       prefix: /views/
@@ -85,16 +84,16 @@ kaptcha:
     
 #email config  
 email: 
-  host: @conf.email.host@
-  protocol: @conf.email.protocol@
-  port: @conf.email.port@
-  username: @conf.email.username@
-  password: @conf.email.password@
+  host: ${conf.email.host}
+  protocol: ${conf.email.protocol}
+  port: ${conf.email.port}
+  username: ${conf.email.username}
+  password: ${conf.email.password}
   encoding: UTF-8
   mailSmtpAuth: true
   prop: true
   mailSmtpTimeout: 25000
-  mailDebug: @conf.email.debug@
+  mailDebug: ${conf.email.debug}
 
 #task.executor
 task: 
