@@ -29,7 +29,9 @@ mybatis:
   mapper-locations: classpath:mybatis/mapper/*Mapper.xml
   config-location: classpath:mybatis/mybatisConfig.xml
 
-spring: 
+spring:
+  application:
+    name: zuishare-manage
   datasource:
     druid:
       url: ${jdbc.url}
@@ -102,9 +104,6 @@ task:
     maxPoolSize: 10
     queueCapacity: 25
 
-logging: 
-  config: classpath:log4j2.xml
-  
 server: 
   port: 8081
 ---
