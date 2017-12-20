@@ -25,4 +25,6 @@ public interface ArticleDao {
     long countByCateId(int categoryId);
 
     void update(Article article);
+
+    void updateStatus(long id, int newStatus);
 }

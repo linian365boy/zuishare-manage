@@ -15,28 +15,16 @@
 				"title":{
 					required:true
 				},
-				"photo":{
-					required:true
-				},
 				"content":{
 					required:true
-				},
-				"priority":{
-					number:true
 				}
 			},
 			messages:{
 				"title":{
 					required:"标题不能为空！"
 				},
-				"photo":{
-					required:"图片不能为空！"
-				},
 				"content":{
 					required:"详情不能为空！"
-				},
-				"priority":{
-					number:"请输入数字！"
 				}
 			},
 			highlight: function(element) {
@@ -46,7 +34,7 @@
 			      jQuery(element).closest('.form-group').removeClass('has-error');
 			},
 			submitHandler: function(form){
-				CKEDITOR.instances.description.updateElement();
+				CKEDITOR.instances.content.updateElement();
 				$(form).ajaxSubmit({
 					dataType:'json',
 					success:function(json) {
@@ -59,8 +47,16 @@
 				});
 			}
 		});
-		CKEDITOR.replace('description');
+		CKEDITOR.replace('content');
 	});
+
+	function changeContentType(type){
+	    if(type == 1){
+            $("div.imgTitle").hide();
+	    }else{
+            $("div.imgTitle").show();
+	    }
+	};
 	</script>
 
 	<section class="content-header">
@@ -84,8 +80,7 @@
 					<label class="error hide"></label>
 				</div>
                 <!-- form start -->
-                <form id="form" class="form-horizontal content" action="${ctx }/admin/article/add"
-		method="post" enctype="multipart/form-data">
+                <form id="form" class="form-horizontal content" action="${ctx }/admin/article/add" method="post" enctype="multipart/form-data">
                   <div class="box-body">
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="title">标题<code>*</code></label>
@@ -107,23 +102,17 @@
                         <label class="col-sm-2 control-label">内容分类<code>*</code></label>
                         <div class="col-sm-10">
                           <label class="radio-inline">
-                            <input type="radio" name="contentType" id="contentType1" value="0" checked>图文类型
+                            <input type="radio" name="contentType" id="contentType1" value="0" checked onclick="changeContentType(0);">图文类型
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="contentType" id="contentType2" value="1">快讯类型
+                            <input type="radio" name="contentType" id="contentType2" value="1" onclick="changeContentType(1);">快讯类型
                           </label>
                         </div>
                     </div>
                     <div class="form-group imgTitle">
                       <label class="col-sm-2 control-label" for="photo">图片标题</label>
                       <div class="col-sm-10">
-                        <input type="file" name="photo" id="photo" class="required" accept="image/*"/>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="priority">排序号</label>
-                      <div class="col-sm-10">
-                        <input type="text" placeholder="排序号，越大排名越前" name="priority" id="priority" class="form-control">
+                        <input type="file" name="photo" id="photo" accept="image/*"/>
                       </div>
                     </div>
                     <div class="form-group">

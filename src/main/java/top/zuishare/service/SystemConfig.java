@@ -27,6 +27,8 @@ public class SystemConfig {
 	private String webConfigPath;
 	//静态资源访问url地址
 	private String staticAceessUrl;
+	//图片服务器访问地址
+	private String imagesServer;
 	
 	/**
 	 * 首页滚动图片最大数量
@@ -137,6 +139,14 @@ public class SystemConfig {
 
 	public void setStaticAceessUrl(String staticAceessUrl) {
 		this.staticAceessUrl = staticAceessUrl;
+	}
+
+	public String getImagesServer() {
+		return imagesServer;
+	}
+
+	public void setImagesServer(String imagesServer) {
+		this.imagesServer = imagesServer;
 	}
 }
 

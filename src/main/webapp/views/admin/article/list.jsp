@@ -76,10 +76,22 @@
 				        '<a class="label label-info publish ml10" href="javascript:void(0)" title="发布">发布</a>',
 						'<a class="label label-danger ml10 remove" href="javascript:void(0)" title="删除">删除</a>'
 				    ].join('');
-		}
+		};
+
+		var contentTypeFormatter = function(value, row, index){
+            if(row.contentType){
+                return "<span class='label label-danger'>快讯类型</span>";
+            }
+            return "<span class='label label-success'>图文类型<span>";
+		};
 
 		var pathFormatter = function(value, row, index){
-            return row.imgTitlePath;
+            return "<img src='"+row.imgTitlePath+"' width='100px' height='70px'/>";
+		};
+
+		var articleStatusFormatter = function(value, row, index){
+		    return row.status?"<a id='status_"+row.id+"' class='label label-info editStatus' title='点击修改状态' href='javascript:void(0)'>正常</a>"
+            				:"<a id='status_"+row.id+"' class='label label-default editStatus' title='点击修改状态' href='javascript:void(0)'>锁定</a>";
 		};
 
 		window.articleActionEvents = {
@@ -93,6 +105,29 @@
 			    	del(row);
 			    }
 		};
+		window.changeStatusEvent = {
+                    'click .editStatus': function(e, value, row, index){
+        				var statusStr = "正常";
+        				if(row.status){
+        					statusStr = "锁定";
+        				}
+        				art.dialog.confirm('确定修改【'+row.title+'】状态为'+statusStr+'？',function(){
+        					$.post("${ctx}/admin/article/"+row.id+"/changeStatus",
+        							{status:row.status},function(data){
+        						if(data.code == "200"){
+        							if(row.status){
+        								$("#status_"+row.id).text("锁定").removeClass("label-info").addClass("label-default");
+        							}else{
+        								$("#status_"+row.id).text("正常").removeClass("label-default").addClass("label-info");
+        							}
+        							$("button[name='refresh']",window.document).click();
+        						}else{
+        							art.dialog.tips("修改状态失败！", 1.5);
+        						}
+        					},"json");
+        				});
+        			}
+                };
 		$("#table").bootstrapTable();
 </script>
 	<!-- Content Header (Page header) -->
@@ -138,12 +173,12 @@
     				<th data-formatter="runningFormatter">序号</th>
 					<th data-field="title">标题</th>
 					<th data-field="imgTitlePath" data-formatter="pathFormatter">标题图片</th>
-					<th data-field="categoryName">主题类别</th>
-					<th data-field="contentType">内容类别</th>
+					<th data-field="categoryName">主题分类</th>
+					<th data-field="contentType" data-formatter="contentTypeFormatter">内容类别</th>
 					<th data-field="status" data-formatter="articleStatusFormatter" data-events="changeStatusEvent">状态</th>
-					<th data-field="viewNum" data-formatter="timeFormatter">观看人数</th>
-					<th data-field="priority">优先值</th>
-					<th data-field="publishTime" data-formatter="timeFormatter" >发布日期</th>
+					<th data-field="viewNum">观看人数</th>
+					<th data-field="createTime" data-formatter="timeFormatter">创建时间</th>
+					<th data-field="publishTime" data-formatter="timeFormatter" >发布时间</th>
 					<th data-formatter="articleActionFormatter" data-events="articleActionEvents">操作</th>
 				</tr>
                 </thead>

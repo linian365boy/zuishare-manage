@@ -9,6 +9,12 @@ public class Constant {
 	 * 一般用于表示状态为正常
 	 */
 	public static final int C_ONE = 1;
+	/**
+	 * 主题的内容类型，1=快讯类型，没有图片
+	 */
+	public static final int ARTICLE_CONTENT_TYPE = 1;
+
+	public static final String AUTHOR = "tanfan";
 	
 	/**
 	 * 栏目路径前缀

@@ -38,9 +38,13 @@
     </select>
 
     <update id="update" parameterType="top.zuishare.spi.model.Article">
-        update from tb_article set title=#{title},contentType=#{contentType},imgTitlePath=#{imgTitlePath},
+        update tb_article set title=#{title},contentType=#{contentType},imgTitlePath=#{imgTitlePath},
         categoryId=#{categoryId},categoryName=#{categoryName},updateTime=#{updateTime},content=#{content},
         status=#{status} where id=#{id}
+    </update>
+
+    <update id="updateStatus">
+        update tb_article set status=#{newStatus} where id=#{id}
     </update>
 
 </mapper>

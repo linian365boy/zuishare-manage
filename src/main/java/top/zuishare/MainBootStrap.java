@@ -17,8 +17,6 @@ import org.springframework.context.annotation.Configuration;
 @EnableAutoConfiguration
 public class MainBootStrap extends SpringBootServletInitializer {
 
-    private static Logger logger = LoggerFactory.getLogger(MainBootStrap.class);
-
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(MainBootStrap.class);

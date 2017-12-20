@@ -72,18 +72,22 @@ public class ArticleController {
     @ResponseBody
     @RequestMapping(value="/add", method = RequestMethod.POST)
     public MessageVo add(MultipartFile photo, Article article){
-        logger.info("add article param => {}", article);
+        logger.info("add article param => {}", article.getTitle());
         StringBuilder sb = new StringBuilder();
         MessageVo vo = null;
         try {
+            if(article.getContentType() == Constant.ARTICLE_CONTENT_TYPE){
+                article.setImgTitlePath(null);
+                photo = null;
+            }
             if(photo != null && !photo.isEmpty()){
-                String realPath = systemConfig.getPicPath()+File.separator+"upload"+File.separator+"article";
+                String realPath = systemConfig.getPicPath()+File.separator+"upload"+File.separator+"articles";
                 String newFileName = realPath+File.separator+ Tools.getRndFilename()+Tools.getExtname(photo.getOriginalFilename());
                 FileUtils.copyInputStreamToFile(photo.getInputStream(), new File(newFileName));
                 String url = newFileName.substring(realPath.lastIndexOf("upload"));
                 article.setImgTitlePath(url);
             }
-            article.setAuthor("TANFAN");
+            article.setAuthor(Constant.AUTHOR);
             article.setCreateTime(System.currentTimeMillis()/1000);
             article.setUpdateTime(System.currentTimeMillis()/1000);
             article.setViewNum(0);
@@ -93,7 +97,7 @@ public class ArticleController {
             articleService.save(article);
             sb.append("文章名称："+article.getTitle());
             logUtil.log(LogType.ADD, sb.toString());
-            logger.info("add article => {} succeed",article);
+            logger.info("add article => {} succeed",article.getTitle());
             vo = new MessageVo(Constant.SUCCESS_CODE,"新增主题文章【"+article.getTitle()+"】成功！");
         } catch (Exception e) {
             logger.error("add article error.",e);
@@ -117,7 +121,7 @@ public class ArticleController {
         try{
             Article temp = articleService.loadOne(article.getId());
             if(photo != null && !photo.isEmpty()){
-                String realPath = systemConfig.getPicPath()+File.separator+"upload"+File.separator+"article";
+                String realPath = systemConfig.getPicPath()+File.separator+"upload"+File.separator+"articles";
                 String newFileName = realPath+File.separator+ Tools.getRndFilename()+Tools.getExtname(photo.getOriginalFilename());
                 FileUtils.copyInputStreamToFile(photo.getInputStream(), new File(newFileName));
                 String url = newFileName.substring(realPath.lastIndexOf("upload"));
@@ -144,7 +148,7 @@ public class ArticleController {
 
     @ResponseBody
     @RequestMapping(value = "/{id}/delete")
-    public MessageVo delete(@PathVariable("id") int id){
+    public MessageVo delete(@PathVariable("id") long id){
         logger.info("delete article param => {}", id);
         MessageVo vo = null;
         Article temp = articleService.loadOne(id);
@@ -153,6 +157,23 @@ public class ArticleController {
         articleService.update(temp);
         vo = new MessageVo(Constant.SUCCESS_CODE, "删除主题文章【"+temp.getTitle()+"】成功！");
         logger.info("delete product return data => {}", vo);
+        return vo;
+    }
+
+    @ResponseBody
+    @RequestMapping("/{id}/changeStatus")
+    public MessageVo changeStatus(@PathVariable("id") long id, int status){
+        logger.info("article  => {}, old status => {} changeStatus.", id, status);
+        MessageVo vo = null;
+        try{
+            articleService.updateStatus(id, status);
+            vo = new MessageVo(Constant.SUCCESS_CODE, "修改状态成功！");
+            logger.error("article => {}, old status => {} changeStatus success.", id, status);
+        }catch (Exception e){
+            logger.error("article => {}, old status => {} changeStatus fail.", id, status, e);
+            vo = new MessageVo(Constant.ERROR_CODE, "修改状态失败！");
+        }
+        logger.info("article => {} change status return data => {}", id, vo);
         return vo;
     }
 

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import top.zuishare.dao.ArticleDao;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Article;
+import top.zuishare.util.Constant;
 import top.zuishare.util.PageRainier;
 
 /**
@@ -41,6 +42,16 @@ public class ArticleService {
 
     public void update(Article article){
         articleDao.update(article);
+    }
+
+    public void updateStatus(long id, int status){
+        int newStatus = status;
+        if(status == Constant.C_ZERO){
+            newStatus = Constant.C_ONE;
+        }else{
+            newStatus = Constant.C_ZERO;
+        }
+        articleDao.updateStatus(id, newStatus);
     }
 
 }

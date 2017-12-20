@@ -23,6 +23,8 @@ conf.web:
   webConfigPath: ${webConfig.path}
 #static resources access path
   staticAceessUrl: ${static.accessPath}
+#images server
+  imagesServer: ${images.server}
 
 #mybatis
 mybatis: 
@@ -60,7 +62,7 @@ spring:
   aop:
     proxy-target-class: true
   profiles:
-    active: win_local
+    active: mac_local
   mvc:
     view: 
       prefix: /views/
