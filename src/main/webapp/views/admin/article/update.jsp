@@ -15,28 +15,16 @@
 				"title":{
 					required:true
 				},
-				"photo":{
-					required:true
-				},
 				"content":{
 					required:true
-				},
-				"priority":{
-					number:true
 				}
 			},
 			messages:{
 				"title":{
 					required:"标题不能为空！"
 				},
-				"photo":{
-					required:"图片不能为空！"
-				},
 				"content":{
 					required:"详情不能为空！"
-				},
-				"priority":{
-					number:"请输入数字！"
 				}
 			},
 			highlight: function(element) {
@@ -46,7 +34,7 @@
 			      jQuery(element).closest('.form-group').removeClass('has-error');
 			},
 			submitHandler: function(form){
-				CKEDITOR.instances.description.updateElement();
+				CKEDITOR.instances.content.updateElement();
 				$(form).ajaxSubmit({
 					dataType:'json',
 					success:function(json) {
@@ -59,8 +47,16 @@
 				});
 			}
 		});
-		CKEDITOR.replace('description');
+		CKEDITOR.replace('content');
 	});
+
+	function changeContentType(type){
+	    if(type == 1){
+            $("div.imgTitle").hide();
+	    }else{
+            $("div.imgTitle").show();
+	    }
+	};
 	</script>
 
 	<section class="content-header">
@@ -71,7 +67,7 @@
       <ol class="breadcrumb">
         <li><a href="${ctx }/admin/index"><i class="fa fa-dashboard"></i> 主页</a></li>
         <li><a href="#">主题文章管理</a></li>
-        <li class="active">主题文章管理</li>
+        <li class="active">更新主题文章</li>
       </ol>
     </section>
 
@@ -80,17 +76,16 @@
 			<div class="col-md-12">
 				<div class="box box-info">
                 <div class="box-header with-border text-center">
-					<h3 class="box-title pull-left">新增主题文章</h3>
+					<h3 class="box-title pull-left">更新主题文章</h3>
 					<label class="error hide"></label>
 				</div>
                 <!-- form start -->
-                <form id="form" class="form-horizontal content" action="${ctx }/admin/article/add"
-		method="post" enctype="multipart/form-data">
+                <form id="form" class="form-horizontal content" action="${ctx }/admin/article/${model.id}/update" method="post" enctype="multipart/form-data">
                   <div class="box-body">
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="title">标题<code>*</code></label>
                       <div class="col-sm-10">
-                        <input type="text" placeholder="标题" name="title" id="title" value="${model.title}" class="form-control">
+                        <input type="text" placeholder="标题" name="title" value="${model.title}" id="title" class="form-control">
                       </div>
                     </div>
                     <div class="form-group">
@@ -98,7 +93,7 @@
                       <div class="col-sm-10">
                         <select name="categoryName" id="categoryName" class="col-xs-5 selectpicker">
                             <c:forEach var="articleCategory" items="${articleCategorys}">
-                                <option value="${articleCategory.id}_${articleCategory.name}" ${articleCategory.id eq model.id}?'selected':''>${articleCategory.name}</option>
+                                <option value="${articleCategory.id}_${articleCategory.name}">${articleCategory.name}</option>
                             </c:forEach>
                         </select>
                       </div>
@@ -107,29 +102,24 @@
                         <label class="col-sm-2 control-label">内容分类<code>*</code></label>
                         <div class="col-sm-10">
                           <label class="radio-inline">
-                            <input type="radio" name="contentType" id="contentType1" value="0" checked>图文类型
+                            <input type="radio" name="contentType" id="contentType1" value="0" onclick="changeContentType(0);">图文类型
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="contentType" id="contentType2" value="1">快讯类型
+                            <input type="radio" name="contentType" id="contentType2" value="1" onclick="changeContentType(1);">快讯类型
                           </label>
                         </div>
                     </div>
                     <div class="form-group imgTitle">
                       <label class="col-sm-2 control-label" for="photo">图片标题</label>
+                      <img src="${ctx}/${model.imgTitlePath}" width="200px" height="140px"/>
                       <div class="col-sm-10">
-                        <input type="file" name="photo" id="photo" class="required" accept="image/*"/>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" for="priority">排序号</label>
-                      <div class="col-sm-10">
-                        <input type="text" placeholder="排序号，越大排名越前" value="${model.priority}" name="priority" id="priority" class="form-control">
+                        <input type="file" name="photo" id="photo" accept="image/*"/>
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="content">主题内容<code>*</code></label>
                       <div class="col-sm-10">
-                        <textarea id="content" rows="16" name="content" value="${model.content}" class="form-control ckeditor"></textarea>
+                        <textarea id="content" rows="16" name="content" class="form-control ckeditor">${model.content}</textarea>
                       </div>
                     </div>
                   </div><!-- /.box-body -->

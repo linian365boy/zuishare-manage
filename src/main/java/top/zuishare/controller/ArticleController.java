@@ -110,13 +110,14 @@ public class ArticleController {
     @RequestMapping(value = "/{id}/update", method = RequestMethod.GET)
     public String updateUI(@PathVariable("id") long id, ModelMap map){
         map.put("model", articleService.loadOne(id));
+        map.put("articleCategorys", articleCategoryService.findList(Constant.C_ONE));
         return "admin/article/update";
     }
 
     @ResponseBody
     @RequestMapping(value = "/{id}/update", method = RequestMethod.POST)
     public MessageVo update(MultipartFile photo, @PathVariable("id") long id, Article article){
-        logger.info("update article param => {}", article);
+        logger.info("update article param => {}", article.getTitle());
         MessageVo vo = null;
         try{
             Article temp = articleService.loadOne(article.getId());
