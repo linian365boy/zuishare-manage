@@ -1,5 +1,6 @@
 package top.zuishare.dao;
 
+import org.apache.ibatis.annotations.Param;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Article;
 
@@ -26,5 +27,9 @@ public interface ArticleDao {
 
     void update(Article article);
 
-    void updateStatus(long id, int newStatus);
+    void updateStatus(@Param("id") long id, @Param("newStatus") int newStatus);
+
+    void publishArticle(Article article);
+
+    List<Article> findAllNormal(@Param("publishStatus") int publishStatus);
 }

@@ -19,6 +19,7 @@ import top.zuishare.spi.model.ArticleCategory;
 import top.zuishare.util.Constant;
 import top.zuishare.util.LogUtil;
 import top.zuishare.util.PageRainier;
+import top.zuishare.util.TimeUtils;
 import top.zuishare.vo.MessageVo;
 import top.zuishare.vo.ReturnData;
 
@@ -66,7 +67,7 @@ public class ArticleCategoryController  {
         logger.info("add article category param => {}", category);
         MessageVo vo = null;
         try {
-            category.setCreateTime(System.currentTimeMillis()/1000);
+            category.setCreateTime(TimeUtils.getTime());
             articleCategoryService.save(category);
             vo = new MessageVo(Constant.SUCCESS_CODE, "新增主题分类【"+category.getName()+"】成功！");
         }catch(Exception e){
@@ -91,7 +92,8 @@ public class ArticleCategoryController  {
         try{
             ArticleCategory tempCcategory = articleCategoryService.loadOne(id);
             category.setCreateTime(tempCcategory.getCreateTime());
-            category.setStatus(tempCcategory.getStatus());
+            //修改分类之后，状态重置回锁定
+            category.setStatus(Constant.C_ZERO);
             articleCategoryService.update(category);
             vo = new MessageVo(Constant.SUCCESS_CODE, "修改商品分类【"+category.getName()+"】成功！");
         }catch(Exception e){

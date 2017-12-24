@@ -1,10 +1,10 @@
 package top.zuishare.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import top.zuishare.dao.ArticleCategoryDao;
 import top.zuishare.spi.dto.request.RequestParam;
-import top.zuishare.spi.model.Article;
 import top.zuishare.spi.model.ArticleCategory;
 import top.zuishare.util.Constant;
 import top.zuishare.util.PageRainier;
@@ -23,6 +23,8 @@ public class ArticleCategoryService {
 
     @Autowired
     private ArticleCategoryDao articleCategoryDao;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     public PageRainier<ArticleCategory> findAllList(RequestParam param){
         long count = articleCategoryDao.findAllCount(param);
@@ -41,11 +43,19 @@ public class ArticleCategoryService {
 
     public void update(ArticleCategory category){
         articleCategoryDao.update(category);
+        if(category.getStatus() == Constant.C_ONE) {
+            //redis主题分类缓存清除
+            stringRedisTemplate.delete(Constant.REDIS_ARTICLE_CATEGORY_KEY);
+        }
     }
 
     public void delCategory(ArticleCategory category){
         category.setStatus(2);
         articleCategoryDao.update(category);
+        if(category.getStatus() == Constant.C_ONE) {
+            //redis主题分类缓存清除
+            stringRedisTemplate.delete(Constant.REDIS_ARTICLE_CATEGORY_KEY);
+        }
     }
 
     /**
@@ -60,6 +70,8 @@ public class ArticleCategoryService {
         }else{
             newStatus = Constant.C_ZERO;
         }
+        //redis主题分类缓存清除
+        stringRedisTemplate.delete(Constant.REDIS_ARTICLE_CATEGORY_KEY);
         articleCategoryDao.updateStatus(id, newStatus);
     }
 

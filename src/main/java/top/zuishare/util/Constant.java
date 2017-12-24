@@ -1,5 +1,7 @@
 package top.zuishare.util;
 
+import java.io.File;
+
 public class Constant {
 	/**
 	 * 一般用于表示状态为锁定
@@ -12,9 +14,23 @@ public class Constant {
 	/**
 	 * 主题的内容类型，1=快讯类型，没有图片
 	 */
-	public static final int ARTICLE_CONTENT_TYPE = 1;
+	public static final int ARTICLE_CONTENT_ONE_TYPE = 1;
 
-	public static final String AUTHOR = "tanfan";
+	/**
+	 * 上传文件的目录前缀
+	 */
+	public static final String UPLOAD_PRE = "upload";
+	/**
+	 * 主图文章图文类型的标题图片上传的目录前缀
+	 */
+	public static final String ARTICLE_PIC_TITLE_PRE = "articles";
+
+	/**
+	 * 主图文章图文类型的标题图片上传的路径前缀
+	 */
+	public static final String UPLOAD_ARTICLE_PIC_TITLE = UPLOAD_PRE + File.separator +ARTICLE_PIC_TITLE_PRE;
+
+	public static final String AUTHOR = "TANFAN";
 	
 	/**
 	 * 栏目路径前缀
@@ -90,5 +106,28 @@ public class Constant {
 	 * 登录表单验证码输入框名称
 	 */
 	public static final String FORM_CAPTCHA_NAME = "captcha";
+
+	/**
+	 *所有正常发布的文章
+	 */
+	public static final String REDIS_ARTICLES_KEY = "articles";
+	/**
+	 *所有正常的文章分类
+	 */
+	public static final String REDIS_ARTICLE_CATEGORY_KEY = "articleCategorys";
+	/**
+	 *热门榜文章
+	 */
+	public static final String REDIS_HOT_ARTICLES_KEY = "hotArticles";
+
+	/**
+	 * 过期时间30天
+	 */
+	public static final int TIMEOUTDAYS = 30;
+
+	/**
+	 * 发布的文章redis的key前缀
+	 */
+	public static final String REDIS_ARTICLE_PRE_KEY = "article_";
 
 }

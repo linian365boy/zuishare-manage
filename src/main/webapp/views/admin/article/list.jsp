@@ -29,45 +29,65 @@
 		};
 		//publish
 		var publish = function(obj){
-			var newsId = obj.id;
-			$.get("${ctx}/admin/article/"+newsId+"/checkPub",function(rs){
-				if(rs=="1"){
-					art.dialog.confirm('此文章【'+obj.title+'】已发布，确定重新发布？',function(){
-						$.getJSON("${ctx}/admin/article/"+newsId+"/release",function(data){
-							var dialog = art.dialog({
-								id:"publish",
-								lock:true
-							});
-							if(data.code==200){
-								dialog.content('恭喜您，发布成功！').time(2.5);
-								$("button[name='refresh']",window.document).click();
-							}else{
-								dialog.content('对不起，发布失败！').time(2.5);
-							}
-						});
-					});
-				}else{
-					art.dialog.confirm('确定发布此【'+obj.title+'】新闻？',function(){
-						$.getJSON("${ctx}/admin/article/"+newsId+"/release",function(data){
-							var dialog = art.dialog({
-								id:"publish",
-								lock:true
-							});
-							 if(data.code==200){
-								dialog.content('恭喜您，发布成功！').time(2.5);
-								$("button[name='refresh']",window.document).click();
-							}else{
-								dialog.content('对不起，发布失败！').time(2.5);
-							}
-						});
-					});
-				}
-			},"html");
+			var articleId = obj.id;
+            art.dialog.confirm('确定发布此【'+obj.title+'】主题文章？',function(){
+                $.post("${ctx}/admin/article/"+articleId+"/release",function(data){
+                    var dialog = art.dialog({
+                        id:"publish",
+                        lock:true
+                    });
+                     if(data.code==200){
+                        dialog.content(data.message).time(2.5);
+                        $("button[name='refresh']",window.document).click();
+                    }else{
+                        dialog.content(data.message).time(2.5);
+                    }
+                },"json");
+            });
 		};
 
-		var timeFormatter = function(value, row, index){
-		    var unixTimestamp = new Date(row.createTime * 1000)
-            return unixTimestamp.toLocaleString();
+		var publishAllNormal = function(){
+		    art.dialog.confirm('确定一键发布所有正常状态的主题文章？',function(){
+                $.post("${ctx}/admin/article/releaseAll",function(data){
+                    var dialog = art.dialog({
+                        id:"publishAll",
+                        lock:true
+                    });
+                     if(data.code==200){
+                        dialog.content(data.message).time(2.5);
+                        $("button[name='refresh']",window.document).click();
+                    }else{
+                        dialog.content(data.message).time(2.5);
+                    }
+                },"json");
+            });
+		};
+
+		var reflushArticles = function(){
+		    art.dialog.confirm('确定一键刷新主题文章缓存？', function(){
+		        $.post("${ctx}/admin/article/reflush",function(data){
+                    var dialog = art.dialog({
+                        id:"reflush",
+                        lock:true
+                    });
+                     if(data.code==200){
+                        dialog.content(data.message).time(2.5);
+                    }else{
+                        dialog.content(data.message).time(2.5);
+                    }
+                },"json");
+		    });
+		};
+
+		var timeFormatter = function(date){
+		    return "<span class='label label-primary'>"+date.toLocaleString()+"</span>";
+		};
+
+		var publishTimeFormatter = function(value, row, index){
+		    if(row.publishTime == 0){
+                return "<span class='label label-warning'>未发布</span>";
+		    }
+		    return timeFormatter(new Date(row.publishTime * 1000));
 		};
 
 		var articleActionFormatter = function(value, row, index){
@@ -86,6 +106,9 @@
 		};
 
 		var pathFormatter = function(value, row, index){
+		    if(row.contentType){
+		        return "<span class='label label-danger'>no image</span>";
+		    }
             return "<img src='"+row.imgTitlePath+"' width='100px' height='70px'/>";
 		};
 
@@ -154,9 +177,15 @@
             <!-- /.box-header -->
             <div class="box-body">
             	<div id="toolbar">
-			        <button class="btn btn-block btn-primary" onclick="add();">
+			        <button class="btn btn-primary" onclick="add();">
 			            <i class="glyphicon glyphicon-plus icon-plus"></i> 新增
 			        </button>
+			        <button class="btn btn-warning" onclick="publishAllNormal();" title="一键发布所有正常状态的主题文章">
+                    	<i class="glyphicon"></i> 一键发布
+                    </button>
+                    <button class="btn btn-danger" onclick="reflushArticles();" title="一键刷新所有正常状态且发布的主题文章缓存">
+                        <i class="glyphicon"></i> 一键刷新文章缓存
+                    </button>
 			    </div>
               <table id="table" data-toolbar="#toolbar"
               data-toggle="table" class="table table-striped" data-search="true" data-show-refresh="true"
@@ -176,9 +205,8 @@
 					<th data-field="categoryName">主题分类</th>
 					<th data-field="contentType" data-formatter="contentTypeFormatter">内容类别</th>
 					<th data-field="status" data-formatter="articleStatusFormatter" data-events="changeStatusEvent">状态</th>
-					<th data-field="viewNum">观看人数</th>
-					<th data-field="createTime" data-formatter="timeFormatter">创建时间</th>
-					<th data-field="publishTime" data-formatter="timeFormatter" >发布时间</th>
+					<th data-field="viewNum">点击量</th>
+					<th data-field="publishTime" data-formatter="publishTimeFormatter" >发布时间</th>
 					<th data-formatter="articleActionFormatter" data-events="articleActionEvents">操作</th>
 				</tr>
                 </thead>

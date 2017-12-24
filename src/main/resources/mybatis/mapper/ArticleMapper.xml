@@ -4,8 +4,9 @@
     <select id="findAllCount" resultType="long">
         select count(*) from tb_article
         <where>
+            status !=2
             <if test="search!=null and search!=''">
-                title like concat('%',#{search},'%')
+                and title like concat('%',#{search},'%')
             </if>
         </where>
     </select>
@@ -13,11 +14,25 @@
     <select id="findList" resultType="top.zuishare.spi.model.Article">
         select * from tb_article
         <where>
+            status !=2
             <if test="search!=null and search!=''">
-                title like concat('%',#{search},'%')
+                and title like concat('%',#{search},'%')
             </if>
         </where>
         order by publishTime desc,createTime desc limit #{offset},#{limit}
+    </select>
+
+    <select id="findAllNormal" resultType="top.zuishare.spi.model.Article" parameterType="int">
+        select * from tb_article where status=1
+        <choose>
+            <when test="publishStatus==1">
+                and publishTime>0
+            </when>
+            <otherwise>
+                and publishTime=0
+            </otherwise>
+        </choose>
+        order by publishTime desc,id desc
     </select>
 
     <select id="getById" resultType="top.zuishare.spi.model.Article">
@@ -27,9 +42,9 @@
 
     <insert id="save" parameterType="top.zuishare.spi.model.Article">
         insert into tb_article(id,title,createTime,contentType,imgTitlePath,categoryId,
-        categoryName,updateTime,author,content,publishTime,status,viewNum)
+        categoryName,updateTime,author,content,publishTime,status,viewNum,introduce)
         values(null,#{title},#{createTime},#{contentType},#{imgTitlePath},#{categoryId},
-        #{categoryName},#{updateTime},#{author},#{content},#{publishTime},#{status},#{viewNum})
+        #{categoryName},#{updateTime},#{author},#{content},#{publishTime},#{status},#{viewNum},#{introduce})
     </insert>
 
     <select id="countByCateId" resultType="long">
@@ -40,11 +55,15 @@
     <update id="update" parameterType="top.zuishare.spi.model.Article">
         update tb_article set title=#{title},contentType=#{contentType},imgTitlePath=#{imgTitlePath},
         categoryId=#{categoryId},categoryName=#{categoryName},updateTime=#{updateTime},content=#{content},
-        status=#{status} where id=#{id}
+        introduce=#{introduce},status=#{status} where id=#{id}
     </update>
 
     <update id="updateStatus">
         update tb_article set status=#{newStatus} where id=#{id}
+    </update>
+
+    <update id="publishArticle" parameterType="top.zuishare.spi.model.Article">
+        update tb_article set updateTime=#{updateTime},publishTime=#{publishTime} where id=#{id}
     </update>
 
 </mapper>

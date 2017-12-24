@@ -93,7 +93,7 @@
                       <div class="col-sm-10">
                         <select name="categoryName" id="categoryName" class="col-xs-5 selectpicker">
                             <c:forEach var="articleCategory" items="${articleCategorys}">
-                                <option value="${articleCategory.id}_${articleCategory.name}">${articleCategory.name}</option>
+                                <option value="${articleCategory.id}_${articleCategory.name}" ${articleCategory.id eq model.categoryId ? "selected":""}>${articleCategory.name}</option>
                             </c:forEach>
                         </select>
                       </div>
@@ -102,20 +102,24 @@
                         <label class="col-sm-2 control-label">内容分类<code>*</code></label>
                         <div class="col-sm-10">
                           <label class="radio-inline">
-                            <input type="radio" name="contentType" id="contentType1" value="0" onclick="changeContentType(0);">图文类型
+                            <input type="radio" name="contentType" id="contentType1" value="0" ${model.contentType eq 0 ? "checked":""} onclick="changeContentType(0);">图文类型
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="contentType" id="contentType2" value="1" onclick="changeContentType(1);">快讯类型
+                            <input type="radio" name="contentType" id="contentType2" value="1" ${model.contentType eq 1 ? "checked":""} onclick="changeContentType(1);">快讯类型
                           </label>
                         </div>
                     </div>
-                    <div class="form-group imgTitle">
+
+                    <div class="form-group imgTitle" style="${model.contentType eq 1 ? 'display: none;':'display: block;'}">
                       <label class="col-sm-2 control-label" for="photo">图片标题</label>
-                      <img src="${ctx}/${model.imgTitlePath}" width="200px" height="140px"/>
                       <div class="col-sm-10">
+                        <c:if test="${model.contentType eq 0}">
+                            <img src="${model.imgTitlePath}" width="200px" height="140px"/>
+                        </c:if>
                         <input type="file" name="photo" id="photo" accept="image/*"/>
                       </div>
                     </div>
+
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="content">主题内容<code>*</code></label>
                       <div class="col-sm-10">

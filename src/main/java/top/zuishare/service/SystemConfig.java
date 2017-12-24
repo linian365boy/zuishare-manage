@@ -29,7 +29,9 @@ public class SystemConfig {
 	private String staticAceessUrl;
 	//图片服务器访问地址
 	private String imagesServer;
-	
+	//文章摘要从文章内容截取最大数
+	private int limitSize;
+
 	/**
 	 * 首页滚动图片最大数量
 	 * @return
@@ -147,6 +149,14 @@ public class SystemConfig {
 
 	public void setImagesServer(String imagesServer) {
 		this.imagesServer = imagesServer;
+	}
+
+	public int getLimitSize() {
+		return limitSize;
+	}
+
+	public void setLimitSize(int limitSize) {
+		this.limitSize = limitSize;
 	}
 }
 

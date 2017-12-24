@@ -2,6 +2,7 @@ package top.zuishare.initConfig;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesView;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 import top.zuishare.service.LogService;
+import top.zuishare.util.GsonUtil;
 import top.zuishare.util.LogUtil;
 
 import java.util.Properties;
@@ -125,5 +127,10 @@ public class InitConfiguration {
 		LogUtil logUtil = LogUtil.getInstance();
 		logUtil.setLogService(logService);
 		return logUtil;
+	}
+
+	@Bean
+	public Gson gson(){
+		return GsonUtil.getGsonInstance();
 	}
 }
