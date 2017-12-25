@@ -21,8 +21,10 @@ import top.zuishare.service.SystemConfig;
 import top.zuishare.spi.dto.LogType;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Article;
+import top.zuishare.spi.model.ArticleCategory;
 import top.zuishare.spi.util.Tools;
 import top.zuishare.util.*;
+import top.zuishare.vo.ArticleQueryVo;
 import top.zuishare.vo.MessageVo;
 import top.zuishare.vo.ReturnData;
 
@@ -286,6 +288,11 @@ public class ArticleController {
             List<Article> articles = articleService.findAllNormal(1);
             if(!CollectionUtils.isEmpty(articles)){
                 articleService.saveToRedis(articles);
+                //每个分类下的文章列表写入redis
+                List<ArticleCategory> categorys=  articleCategoryService.findList(1);
+                for(ArticleCategory category : categorys){
+                    articleService.findArticles(new ArticleQueryVo(1, 1, category.getId()));
+                }
             }else{
                 logger.warn("reflush articles redis, but not found normal articles.");
             }

@@ -35,6 +35,27 @@
         order by publishTime desc,id desc
     </select>
 
+    <select id="findArticles" parameterType="top.zuishare.vo.ArticleQueryVo" resultType="top.zuishare.spi.model.Article">
+        select * from tb_article
+        <where>
+            <if test="vo.status!=null">
+                status=#{vo.status}
+            </if>
+            <if test="vo.categoryId!=null">
+                and categoryId=#{vo.categoryId}
+            </if>
+            <choose>
+                <when test="vo.publishStatus==1">
+                    and publishTime>0
+                </when>
+                <otherwise>
+                    and publishTime=0
+                </otherwise>
+            </choose>
+        </where>
+        order by publishTime desc,id desc;
+    </select>
+
     <select id="getById" resultType="top.zuishare.spi.model.Article">
         select * from tb_article
         where id = #{id}

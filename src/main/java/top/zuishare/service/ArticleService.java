@@ -11,6 +11,7 @@ import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Article;
 import top.zuishare.util.Constant;
 import top.zuishare.util.PageRainier;
+import top.zuishare.vo.ArticleQueryVo;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -106,5 +107,9 @@ public class ArticleService {
     public void saveToRedis(List<Article> articles){
         stringRedisTemplate.opsForValue().set(Constant.REDIS_ARTICLES_KEY, gson.toJson(articles),
                 Constant.TIMEOUTDAYS, TimeUnit.DAYS);
+    }
+
+    public List<Article> findArticles(ArticleQueryVo vo){
+        return articleDao.findArticles(vo);
     }
 }

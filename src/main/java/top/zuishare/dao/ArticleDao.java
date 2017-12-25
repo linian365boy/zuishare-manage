@@ -3,6 +3,7 @@ package top.zuishare.dao;
 import org.apache.ibatis.annotations.Param;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Article;
+import top.zuishare.vo.ArticleQueryVo;
 
 import java.util.List;
 
@@ -32,4 +33,6 @@ public interface ArticleDao {
     void publishArticle(Article article);
 
     List<Article> findAllNormal(@Param("publishStatus") int publishStatus);
+
+    List<Article> findArticles(@Param("vo") ArticleQueryVo vo);
 }
