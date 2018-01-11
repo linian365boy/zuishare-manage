@@ -3,7 +3,6 @@ package top.zuishare.controller;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,6 @@ import top.zuishare.vo.ReturnData;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -156,8 +152,9 @@ public class ArticleController {
                 String url = newFileName.substring(realPath.lastIndexOf(Constant.UPLOAD_PRE));
                 article.setImgTitlePath(url);
                 //如果原类型为图文类型，把原图片删除
-                if(temp.getContentType() != Constant.ARTICLE_CONTENT_ONE_TYPE) {
-                    FileUtil.delFile(realPath  + temp.getImgTitlePath().substring(Constant.UPLOAD_ARTICLE_PIC_TITLE.length()));
+                if(temp.getContentType() != Constant.ARTICLE_CONTENT_ONE_TYPE
+                        && StringUtils.isNotBlank(temp.getImgTitlePath())) {
+                    FileUtil.delFile(realPath + temp.getImgTitlePath().substring(Constant.UPLOAD_ARTICLE_PIC_TITLE.length()));
                 }
             }else if(article.getContentType() != Constant.ARTICLE_CONTENT_ONE_TYPE){
                 article.setImgTitlePath(temp.getImgTitlePath());
@@ -231,6 +228,7 @@ public class ArticleController {
     @ResponseBody
     @RequestMapping(value = "/{id}/release", method = RequestMethod.POST)
     public MessageVo releaseArticle(@PathVariable("id") long id){
+        long start = System.currentTimeMillis();
         MessageVo vo = null;
         try{
             Article article = articleService.loadOne(id);
@@ -247,13 +245,14 @@ public class ArticleController {
             logger.error("release article id => {} fail.", id, e);
             vo = new MessageVo(Constant.ERROR_CODE, "发布主题文章失败！");
         }
-        logger.info("release article return data => {}", vo);
+        logger.info("release article return data => {}, cost {} ms.", vo, System.currentTimeMillis() - start);
         return vo;
     }
 
     @ResponseBody
     @RequestMapping(value = "/releaseAll", method = RequestMethod.POST)
     public MessageVo releaseAll(){
+        long start = System.currentTimeMillis();
         MessageVo vo = null;
         try{
             List<Article> articles = articleService.findAllNormal(0);
@@ -276,13 +275,14 @@ public class ArticleController {
             logger.error("release all normal status articles fail.", e);
             vo = new MessageVo(Constant.ERROR_CODE, "一键发布主题文章失败！");
         }
-        logger.info("release all normal status articles return data => {}", vo);
+        logger.info("release all normal status articles return data => {}, cost {} ms.", vo, System.currentTimeMillis() - start);
         return vo;
     }
 
     @ResponseBody
     @RequestMapping(value = "/reflush", method = RequestMethod.POST)
     public MessageVo reflush(){
+        long start = System.currentTimeMillis();
         MessageVo vo = null;
         try{
             List<Article> articles = articleService.findAllNormal(1);
@@ -301,7 +301,7 @@ public class ArticleController {
             logger.error("reflush articles redis fail.", e);
             vo = new MessageVo(Constant.ERROR_CODE, "重新刷入redis失败！");
         }
-        logger.info("refulsh articles redis return data => {}", vo);
+        logger.info("refulsh articles redis return data => {}, cost {} ms", vo, System.currentTimeMillis() - start);
         return vo;
     }
 

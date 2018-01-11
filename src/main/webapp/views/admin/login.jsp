@@ -41,7 +41,7 @@ function changeCode(){
   		<input id="submit" type="submit" value="Log in"/>
   	</fieldset>
   	<div id="login_footer">
-      Copyright &copy; <%=Calendar.getInstance().get(Calendar.YEAR) %> linian365boy#sina.com。把#换成@
+      Copyright &copy; <%=Calendar.getInstance().get(Calendar.YEAR) %> admin#zuishare.top。把#换成@
     </div>
   </form>
 </body>

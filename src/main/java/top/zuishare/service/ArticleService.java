@@ -11,6 +11,7 @@ import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Article;
 import top.zuishare.util.Constant;
 import top.zuishare.util.PageRainier;
+import top.zuishare.util.RedisUtil;
 import top.zuishare.vo.ArticleQueryVo;
 
 import java.util.List;
@@ -58,10 +59,11 @@ public class ArticleService {
         articleDao.update(article);
         if(article.getStatus() == Constant.C_ZERO && article.getPublishTime() > 0){
             //状态为锁定并且发布过的主题文章修改，删除缓存
-            stringRedisTemplate.delete(Constant.REDIS_ARTICLES_KEY);
-            stringRedisTemplate.delete(Constant.REDIS_HOT_ARTICLES_KEY);
-            stringRedisTemplate.delete(Constant.REDIS_ARTICLE_PRE_KEY+article.getId());
-            logger.warn("delete articles and hot article and article => {} redis key.", article.getId());
+            stringRedisTemplate.delete(RedisUtil.getAllPublishArticlesKey());
+            stringRedisTemplate.delete(RedisUtil.getHotArticlesKey());
+            stringRedisTemplate.delete(RedisUtil.getArticleKey(article.getId()));
+            logger.warn("delete articles and hot article and article key " +
+                    "and article viewNum key and article => {} redis key.", article.getId());
         }
     }
 
@@ -71,16 +73,15 @@ public class ArticleService {
         if(status == Constant.C_ZERO){
             newStatus = Constant.C_ONE;
             //加入缓存
-            stringRedisTemplate.opsForValue().set(Constant.REDIS_ARTICLE_PRE_KEY+id,
-                    gson.toJson(tempArticle));
+            stringRedisTemplate.opsForValue().set(RedisUtil.getArticleKey(id), gson.toJson(tempArticle));
         }else{
             newStatus = Constant.C_ZERO;
             //正常状态变为锁定时，删除缓存
-            stringRedisTemplate.delete(Constant.REDIS_ARTICLES_KEY);
-            stringRedisTemplate.delete(Constant.REDIS_HOT_ARTICLES_KEY);
-            logger.warn("delete articles and hot article redis key.");
+            stringRedisTemplate.delete(RedisUtil.getAllPublishArticlesKey());
+            stringRedisTemplate.delete(RedisUtil.getHotArticlesKey());
             //删除缓存
-            stringRedisTemplate.delete(Constant.REDIS_ARTICLE_PRE_KEY+id);
+            stringRedisTemplate.delete(RedisUtil.getArticleKey(id));
+            logger.warn("delete articles and hot article and article and article viewNum redis key.");
         }
         articleDao.updateStatus(id, newStatus);
     }
@@ -88,11 +89,10 @@ public class ArticleService {
     public void publishArticle(Article article){
         articleDao.publishArticle(article);
         //发布成功之后，删除缓存
-        stringRedisTemplate.delete(Constant.REDIS_ARTICLES_KEY);
-        logger.warn("delete articles redis key.");
+        stringRedisTemplate.delete(RedisUtil.getAllPublishArticlesKey());
         //发布成功之后，加入redis
-        stringRedisTemplate.opsForValue().set(Constant.REDIS_ARTICLE_PRE_KEY+article.getId(),
-                gson.toJson(article), -1, TimeUnit.DAYS);
+        stringRedisTemplate.opsForValue().set(RedisUtil.getArticleKey(article.getId()), gson.toJson(article));
+        logger.warn("delete articles redis key.");
     }
 
     /**
@@ -105,7 +105,7 @@ public class ArticleService {
     }
 
     public void saveToRedis(List<Article> articles){
-        stringRedisTemplate.opsForValue().set(Constant.REDIS_ARTICLES_KEY, gson.toJson(articles),
+        stringRedisTemplate.opsForValue().set(RedisUtil.getAllPublishArticlesKey(), gson.toJson(articles),
                 Constant.TIMEOUTDAYS, TimeUnit.DAYS);
     }
 

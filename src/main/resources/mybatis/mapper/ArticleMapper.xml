@@ -87,4 +87,12 @@
         update tb_article set updateTime=#{updateTime},publishTime=#{publishTime} where id=#{id}
     </update>
 
+    <update id="updateViewNum">
+        update tb_article
+        <set>
+            viewNum=#{viewNum}
+        </set>
+        where id=#{articleId}
+    </update>
+
 </mapper>

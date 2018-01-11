@@ -64,7 +64,7 @@ spring:
   aop:
     proxy-target-class: true
   profiles:
-    active: mac_local
+    active: @profiles.active@
   mvc:
     view: 
       prefix: /views/
@@ -120,6 +120,10 @@ email:
   prop: true
   mailSmtpTimeout: 25000
   mailDebug: ${conf.email.debug}
+
+logback:
+  back:
+    directory: ${logback.back.directory}
 
 #task.executor
 task: 

@@ -35,4 +35,6 @@ public interface ArticleDao {
     List<Article> findAllNormal(@Param("publishStatus") int publishStatus);
 
     List<Article> findArticles(@Param("vo") ArticleQueryVo vo);
+
+    void updateViewNum(@Param("articleId") long articleId,@Param("viewNum") int viewNum);
 }

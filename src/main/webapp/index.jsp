@@ -6,5 +6,5 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>最分享 | 分享身边最好的东西 | 后台管理系统</title>
 </head>
-<body><%response.sendRedirect("/admin");%></body>
+<body><jsp:forward page="/admin/login"></jsp:forward></body>
 </html>

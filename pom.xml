@@ -4,7 +4,7 @@
     <groupId>top.zuishare</groupId>
     <artifactId>zuishare-manage</artifactId>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
     <name>zuishare-manage Maven Webapp</name>
     <url>http://maven.apache.org</url>
 
@@ -172,20 +172,22 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.1.5</version>
         </dependency>
-        <!-- Provided -->
+
+        <!-- prd 不需要 start -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <version>${spring.boot.version}</version>
-            <scope>compile</scope>
+            <scope>${scope.jar}</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
             <version>8.5.14</version>
-            <scope>compile</scope>
+            <scope>${scope.jar}</scope>
         </dependency>
+        <!-- prd不需要 end -->
 
         <dependency>
             <groupId>top.zuishare</groupId>
@@ -213,7 +215,7 @@
         <resources>
             <resource>
                 <directory>${basedir}/src/main/resources</directory>
-                <filtering>false</filtering>
+                <filtering>true</filtering>
             </resource>
             <resource>
                 <directory>${basedir}/src/main/filters</directory>
@@ -257,4 +259,34 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>mac_local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <profiles.active>mac_local</profiles.active>
+                <maven.test.skip>true</maven.test.skip>
+                <scope.jar>compile</scope.jar>
+            </properties>
+        </profile>
+        <profile>
+            <id>win_local</id>
+            <properties>
+                <profiles.active>win_local</profiles.active>
+                <maven.test.skip>true</maven.test.skip>
+                <scope.jar>compile</scope.jar>
+            </properties>
+        </profile>
+        <profile>
+            <id>prd</id>
+            <properties>
+                <profiles.active>prd</profiles.active>
+                <maven.test.skip>true</maven.test.skip>
+                <scope.jar>provided</scope.jar>
+            </properties>
+        </profile>
+    </profiles>
 </project>
