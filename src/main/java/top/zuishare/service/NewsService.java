@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.zuishare.dao.NewsDao;
-import top.zuishare.model.News;
 import top.zuishare.spi.dto.request.RequestParam;
+import top.zuishare.spi.model.News;
 import top.zuishare.util.PageRainier;
 
 import java.util.List;
@@ -93,7 +93,7 @@ public class NewsService {
 	}
 
 	public PageRainier<News> findAllByColId(RequestParam param,
-			Integer colId, int depth) {
+											Integer colId, int depth) {
 		//Page<News> tempPage = newsDao.findAll(countByColIdSpec(colId,depth), 
 		//		new PageRequest(pageNo-1,pageSize,new Sort(Direction.DESC,"id","priority")));
 		long count = newsDao.findAllCountByColId(colId,depth);

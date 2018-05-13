@@ -4,8 +4,8 @@ import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import top.zuishare.model.Company;
 import top.zuishare.spi.dto.ConstantVariable;
+import top.zuishare.spi.model.Company;
 import top.zuishare.spi.util.Tools;
 
 @Service("companyService")

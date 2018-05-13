@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.zuishare.dao.ColumnDao;
-import top.zuishare.model.Column;
 import top.zuishare.spi.dto.request.RequestParam;
+import top.zuishare.spi.model.Column;
 import top.zuishare.util.PageRainier;
 
 import java.util.List;

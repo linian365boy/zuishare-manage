@@ -1,8 +1,8 @@
 package top.zuishare.dao;
 
 import org.apache.ibatis.annotations.Param;
-import top.zuishare.model.Advertisement;
 import top.zuishare.spi.dto.request.RequestParam;
+import top.zuishare.spi.model.Advertisement;
 
 import java.util.List;
 

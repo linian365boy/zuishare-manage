@@ -7,7 +7,7 @@
 		art.dialog.open(url,{
 			title:'添加滚动图片',
 			id:'tianjia',
-			width: 768,
+			width: 968,
 			height: 440,
 			resize: false
 		});
@@ -52,7 +52,7 @@
 		});
 	};
 	var adImgFormatter = function(value, row, index){
-		return "<img title='"+row.name +"' alt='"+row.name +"' src='${applicationScope.staticAccessPath }/"+row.picUrl+"' width='107px' height='50px'/>";
+		return "<img title='"+row.name +"' alt='"+row.name +"' src='"+row.picUrl+"' width='107px' height='50px'/>";
 	}
 	
 	var adHrefFormatter = function(value, row, index){

@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import top.zuishare.model.Advertisement;
 import top.zuishare.service.AdvertisementService;
 import top.zuishare.service.SystemConfig;
 import top.zuishare.spi.dto.LogType;
 import top.zuishare.spi.dto.request.RequestParam;
+import top.zuishare.spi.model.Advertisement;
 import top.zuishare.spi.util.Tools;
 import top.zuishare.util.Constant;
 import top.zuishare.util.FileUtil;
@@ -64,12 +64,12 @@ public class AdvertisementController {
 		MessageVo vo = null;
 		try{
 			if(!photo.isEmpty()){
-				//String realPath = request.getSession().getServletContext().getRealPath("/resources/upload/ads");
-				String realPath = systemConfig.getPicPath()+File.separator+"upload"+File.separator+"ads";
+				//picPath前面的file:不需要
+				String realPath = systemConfig.getPicPath().substring(5)+Constant.ADS_PIC_TITLE_PRE;
 				String newFileName = realPath+File.separator+ Tools.getRndFilename()+Tools.getExtname(photo.getOriginalFilename());
 				FileUtils.copyInputStreamToFile(photo.getInputStream(), new File(newFileName));
-				String url = newFileName.substring(realPath.lastIndexOf("upload"));
-				ad.setPicUrl(url.replace("\\", "/"));
+				String url = newFileName.substring(realPath.lastIndexOf(Constant.UPLOAD_PRE));
+				ad.setPicUrl(url);
 			}else{
 				logger.error("{}上传图片不能为空！",ad.getName());
 			}

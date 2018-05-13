@@ -4,8 +4,8 @@ import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import top.zuishare.model.WebConfig;
 import top.zuishare.spi.dto.ConstantVariable;
+import top.zuishare.spi.model.WebConfig;
 import top.zuishare.spi.util.Tools;
 
 import java.util.Date;

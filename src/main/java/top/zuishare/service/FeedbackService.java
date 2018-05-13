@@ -3,8 +3,8 @@ package top.zuishare.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.zuishare.dao.FeedbackDao;
-import top.zuishare.model.Feedback;
 import top.zuishare.spi.dto.request.RequestParam;
+import top.zuishare.spi.model.Feedback;
 import top.zuishare.util.PageRainier;
 
 import java.util.Date;

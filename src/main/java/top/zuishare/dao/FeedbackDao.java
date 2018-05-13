@@ -1,7 +1,7 @@
 package top.zuishare.dao;
 
-import top.zuishare.model.Feedback;
 import top.zuishare.spi.dto.request.RequestParam;
+import top.zuishare.spi.model.Feedback;
 
 import java.util.List;
 

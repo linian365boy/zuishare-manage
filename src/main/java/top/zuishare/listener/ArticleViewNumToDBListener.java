@@ -19,7 +19,7 @@ import top.zuishare.util.ScheduleUtil;
  * @date: 2018/1/4 下午11:25
  * @since JDK 1.7
  */
-@Component
+//@Component
 public class ArticleViewNumToDBListener implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger logger = LoggerFactory.getLogger(ArticleViewNumToDBListener.class);

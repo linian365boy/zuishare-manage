@@ -158,4 +158,10 @@ public class Constant {
 	 */
 	public static final String REDIS_CATEGORY_ARTICLES_PRE_KEY = "categoryId";
 
+
+	/**
+	 * 滚动图片上传的目录前缀
+	 */
+	public static final String ADS_PIC_TITLE_PRE = "ads";
+
 }
