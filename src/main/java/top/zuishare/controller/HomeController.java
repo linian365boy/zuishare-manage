@@ -19,16 +19,15 @@ import java.io.IOException;
  */
 @Controller
 @Scope("prototype")
-@RequestMapping("/admin")
 public class HomeController {
 	private final static Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	@RequestMapping(value={"","/","/index"}, method = RequestMethod.GET)
+	@RequestMapping(value={"/admin","/admin/index"}, method = RequestMethod.GET)
 	public String home(ModelMap map) {
 		return "admin/index";
 	}
 	
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@RequestMapping(value = {"/admin/login", "", "/"}, method = RequestMethod.GET)
 	public String login(Model model) {
 		return "admin/login";
 	}
@@ -40,7 +39,7 @@ public class HomeController {
 	 * @since JDK 1.7
 	 */
 	@ResponseBody
-	@RequestMapping("/invalidate")
+	@RequestMapping("/admin/invalidate")
 	public String invalidate(HttpServletRequest reqeust,HttpServletResponse response){
 		String ajaxHeader = reqeust.getHeader("X-Requested-With");
         boolean isAjax = "XMLHttpRequest".equals(ajaxHeader);
@@ -56,7 +55,7 @@ public class HomeController {
         return "";
 	}
 	
-	@RequestMapping(value="/accessDenied", method = RequestMethod.GET)
+	@RequestMapping(value="/admin/accessDenied", method = RequestMethod.GET)
 	public String accessDenied(){
 		logger.warn("You enter accessDenied Page!");
 		return "403";

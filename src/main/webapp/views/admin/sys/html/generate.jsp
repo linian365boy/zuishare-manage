@@ -124,8 +124,14 @@
 					    <input type="text" class="form-control" placeholder="栏目代码" id="code" name="code">
 					    </div>
 					  </div>
-					  <button type="button" onclick="genneratePage();" class="btn btn-danger">生成页面</button>
-					  <button type="button" onclick="gennerateAllPage();" class="btn btn-danger pull-right">一键生成所有页面</button>
+
+					  <div class="form-group">
+                        <div class="col-xs-7">
+                        <input type="text" class="form-control" placeholder="栏目代码" id="code" name="code">
+                        </div>
+                      </div>
+
+
 				</form>
 			</div>
             </div>
