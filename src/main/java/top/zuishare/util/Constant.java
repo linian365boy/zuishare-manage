@@ -164,4 +164,18 @@ public class Constant {
 	 */
 	public static final String ADS_PIC_TITLE_PRE = "ads";
 
+	/**
+	 * 产品图片上传的目录前缀
+	 */
+	public static final String PRODUCTS_PIC_PRE = "prodocts";
+	/**
+	 * 公司相关图片上传的目录前缀
+	 */
+	public static final String COMPANY_PIC_PRE = "company";
+
+	/**
+	 * 新闻图片上传的目录前缀
+	 */
+	public static final String NEWS_PIC_PRE = "news";
+
 }

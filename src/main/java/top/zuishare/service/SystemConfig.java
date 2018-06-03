@@ -158,6 +158,13 @@ public class SystemConfig {
 	public void setLimitSize(int limitSize) {
 		this.limitSize = limitSize;
 	}
+
+	public String getFileUploadDic(){
+		if (getPicPath() != null) {
+			return getPicPath().substring(5);
+		}
+		return null;
+	}
 }
 
 	

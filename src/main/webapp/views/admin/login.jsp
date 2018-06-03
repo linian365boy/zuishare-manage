@@ -4,8 +4,8 @@
 <html> 
 <head> 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-<meta http-equiv="description" content="最分享，分享有趣的东西">
-<meta http-equiv="author" content="zuishare">
+<meta http-equiv="description" content="szyoy">
+<meta http-equiv="author" content="szyoy">
 <title>login page</title>
 <link rel="icon" href="${ctx }/resources/dist/img/favicon_48X66.ico"
 	type="image/x-icon">
@@ -41,7 +41,7 @@ function changeCode(){
   		<input id="submit" type="submit" value="Log in"/>
   	</fieldset>
   	<div id="login_footer">
-      Copyright &copy; <%=Calendar.getInstance().get(Calendar.YEAR) %> admin#zuishare.top。把#换成@
+      Copyright &copy; <%=Calendar.getInstance().get(Calendar.YEAR) %> www.szyoy.com
     </div>
   </form>
 </body>

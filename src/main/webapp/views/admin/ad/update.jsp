@@ -16,7 +16,7 @@
 <!-- Theme style -->
 <link rel="stylesheet" href="/resources/dist/css/AdminLTE.min.css">
 <link rel="stylesheet" type="text/css" href="/resources/dist/css/customUse.css" />
-<title>添加滚动图片</title>
+<title>编辑滚动图片</title>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#form").validate({
@@ -94,7 +94,7 @@
   <div class="form-group">
     <label for="photo" class="col-sm-2 control-label">图片<code>*</code></label>
     <div class="col-sm-8">
-    	<img alt="" src="${applicationScope.staticAccessPath }/${model.picUrl}" width="107px" height="50px"/>
+    	<img alt="${model.name}" src="${ctx }/admin/${model.picUrl}" width="107px" height="50px"/>
       <input type="file" id="photo" name="photo" placeholder="图片">
     </div>
   </div>

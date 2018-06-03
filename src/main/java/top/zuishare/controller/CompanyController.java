@@ -59,8 +59,7 @@ public class CompanyController {
 		MessageVo vo = null;
 		try{
 			if(photos!=null && !photos.isEmpty()){
-				//String realPath = request.getSession().getServletContext().getRealPath("/resources/upload/company");
-				String realPath = systemConfig.getPicPath()+File.separator+"upload"+File.separator+"company";
+				String realPath = systemConfig.getFileUploadDic() + Constant.COMPANY_PIC_PRE;
 				String newFileName = realPath+File.separator+ Tools.getRndFilename()+Tools.getExtname(photos.getOriginalFilename());
 				//把前一张图片删除
 				FileUtil.delFile(systemConfig.getPicPath()+File.separator+temp.getLogo());

@@ -131,8 +131,7 @@ public class ProductController {
 			if(productId!=null){
 				Product tempProduct = productService.loadProductById(productId);
 				if(photo!=null && !photo.isEmpty()){
-					//String realPath = request.getSession().getServletContext().getRealPath("/resources/upload/products");
-					String realPath = systemConfig.getPicPath()+File.separator+"upload"+File.separator+"products";
+					String realPath = systemConfig.getFileUploadDic()+Constant.PRODUCTS_PIC_PRE;
 					String newFileName = realPath+File.separator+ Tools.getRndFilename()+Tools.getExtname(photo.getOriginalFilename());
 					//把前一张图片删除
 					FileUtil.delFile(systemConfig.getPicPath()+File.separator+tempProduct.getPicUrl());
@@ -201,7 +200,7 @@ public class ProductController {
 			}else{
 				product.setCategoryId(Integer.parseInt(categoryId));
 			}
-			String realPath = systemConfig.getPicPath()+File.separator+"upload"+File.separator+"products";
+			String realPath = systemConfig.getFileUploadDic()+Constant.PRODUCTS_PIC_PRE;
 			String newFileName = realPath+File.separator+Tools.getRndFilename()+Tools.getExtname(photo.getOriginalFilename());
 			FileUtils.copyInputStreamToFile(photo.getInputStream(), new File(newFileName));
 			String url = newFileName.substring(realPath.lastIndexOf("upload"));

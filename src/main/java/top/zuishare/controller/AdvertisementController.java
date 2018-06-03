@@ -116,8 +116,7 @@ public class AdvertisementController {
 			temp = service.loadAdvertisement(id);
 			ad.setCreateDate(temp.getCreateDate());
 			if(photo!=null && !photo.isEmpty()){
-				//String realPath = request.getSession().getServletContext().getRealPath("/resources/upload/ads");
-				String realPath = systemConfig.getPicPath()+File.separator+"upload"+File.separator+"ads";
+				String realPath = systemConfig.getFileUploadDic()+Constant.ADS_PIC_TITLE_PRE;
 				String newFileName = realPath+File.separator+Tools.getRndFilename()+Tools.getExtname(photo.getOriginalFilename());
 				FileUtil.delFile(systemConfig.getPicPath()+File.separator+temp.getPicUrl());
 				FileUtils.copyInputStreamToFile(photo.getInputStream(), new File(newFileName));
