@@ -35,7 +35,7 @@ mybatis:
 
 spring:
   application:
-    name: zuishare-manage
+    name: szyoy-manage
   datasource:
     druid:
       url: ${jdbc.url}

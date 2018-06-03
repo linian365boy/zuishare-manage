@@ -167,7 +167,7 @@ public class Constant {
 	/**
 	 * 产品图片上传的目录前缀
 	 */
-	public static final String PRODUCTS_PIC_PRE = "prodocts";
+	public static final String PRODUCTS_PIC_PRE = "products";
 	/**
 	 * 公司相关图片上传的目录前缀
 	 */
