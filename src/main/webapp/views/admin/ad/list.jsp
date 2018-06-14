@@ -17,7 +17,7 @@
 		art.dialog.open(url,{
 			title:'修改滚动图片',
 			id:'bianji',
-			width: 768,
+			width: 968,
 			height: 440,
 			resize: false
 		});

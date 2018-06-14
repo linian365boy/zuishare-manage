@@ -24,6 +24,7 @@ import top.zuishare.vo.ReturnData;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -148,6 +149,7 @@ public class ColumnController {
 	public ResultVo<String> delete(@PathVariable Integer id){
 		logger.info("delete column param => {}", id);
 		Column temp = columnService.getById(id);
+		System.out.println(temp.getChildColumn().isEmpty());
 		ResultVo<String> vo = new ResultVo<String>();
 		if(!(CollectionUtils.isEmpty(temp.getChildColumn()))){
 			//还有子节点，不能删除

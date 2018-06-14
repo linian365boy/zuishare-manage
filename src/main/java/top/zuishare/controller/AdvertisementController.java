@@ -131,11 +131,11 @@ public class AdvertisementController {
 				logger.info("修改滚动图片信息成功，原图片信息：{}，修改后信息：{}",temp,ad);
 				vo = new MessageVo(Constant.SUCCESS_CODE,"修改滚动图片信息【"+ad.getName()+"】成功");
 			}else{
-				vo = new MessageVo(Constant.ERROR_CODE,"修改滚动图片【"+ad+"】发生失败！");
+				vo = new MessageVo(Constant.ERROR_CODE,"修改滚动图片【"+ad.getName()+"】发生失败！");
 			}
 		}catch(Exception e){
 			logger.error("修改滚动图片信息发生错误",e);
-			vo = new MessageVo(Constant.ERROR_CODE,"修改滚动图片【"+ad+"】发生失败！");
+			vo = new MessageVo(Constant.ERROR_CODE,"修改滚动图片【"+ad.getName()+"】发生失败！");
 		}
 		return vo;
 	}

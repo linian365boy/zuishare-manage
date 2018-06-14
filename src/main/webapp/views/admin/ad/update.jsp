@@ -4,6 +4,8 @@
 <!DOCTYPE html >
 <html>
 <head>
+<script type="text/javascript" src="${ctx }/resources/plugins/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="${ctx }/resources/plugins/ckeditor/lang/zh-cn.js"></script>
 <!-- jQuery 2.2.3 -->
 <script src="/resources/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- jQuery form plugin -->
@@ -65,6 +67,7 @@
 			      jQuery(element).closest('.form-group').removeClass('has-error');
 			},
 			submitHandler: function(form){
+			    CKEDITOR.instances.comment.updateElement();
 				$(form).ajaxSubmit({
 					dataType:'json',
 					success:function(json) {
@@ -122,6 +125,12 @@
       <input type="text" class="form-control" id="priority" value="${model.priority }" name="priority" placeholder="排序号，越大排名越前">
     </div>
   </div>
+  <div class="form-group">
+    			    <label for="content" class="col-sm-2 control-label">备注(显示在图片上)</label>
+    			    <div class="col-sm-8">
+    			      <textarea id="comment" name="comment" class="form-control ckeditor" placeholder="备注会显示在图片上，最多255个字符">${model.comment}</textarea>
+    			    </div>
+    		   </div>
   <input type="hidden" name="id" value="${model.id }"/>
    <div class="form-group has-error hide">
   	  <label class="col-sm-3 control-label">&nbsp;</label>

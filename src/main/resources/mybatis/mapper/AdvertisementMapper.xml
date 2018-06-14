@@ -11,8 +11,8 @@
 	</update>
 	
 	<insert id="save" parameterType="Advertisement">
-		insert into tb_advertisement(id,name,picUrl,width,height,url,priority,createDate,status) 
-		values(null,#{name},#{picUrl},#{width},#{height},#{url},#{priority},#{createDate},#{status})
+		insert into tb_advertisement(id,name,picUrl,width,height,url,priority,createDate,status,comment)
+		values(null,#{name},#{picUrl},#{width},#{height},#{url},#{priority},#{createDate},#{status},#{comment})
 	</insert>
 	
 	<delete id="delete" parameterType="int">
@@ -47,6 +47,6 @@
 	
 	<update id="updateAdvertisement" parameterType="Advertisement">
 		update tb_advertisement set name=#{name},picUrl=#{picUrl},width=#{width},
-		height=#{height},url=#{url},priority=#{priority} where id=#{id}
+		height=#{height},url=#{url},priority=#{priority},comment=#{comment} where id=#{id}
 	</update>
 </mapper>

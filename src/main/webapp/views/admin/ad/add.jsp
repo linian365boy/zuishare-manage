@@ -69,6 +69,7 @@
 			      jQuery(element).closest('.form-group').removeClass('has-error');
 			},
 			submitHandler: function(form){
+			    CKEDITOR.instances.comment.updateElement();
 				$(form).ajaxSubmit({
 					dataType:'json',
 					success:function(json) {
@@ -129,7 +130,7 @@
   <div class="form-group">
   			    <label for="content" class="col-sm-2 control-label">备注(显示在图片上)</label>
   			    <div class="col-sm-8">
-  			      <textarea id="comment" name="comment" class="form-control ckeditor" placeholder="备注会显示在图片上"></textarea>
+  			      <textarea id="comment" name="comment" class="form-control ckeditor" placeholder="备注会显示在图片上，最多255个字符"></textarea>
   			    </div>
   		   </div>
 
