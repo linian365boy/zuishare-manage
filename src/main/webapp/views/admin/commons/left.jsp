@@ -1,7 +1,6 @@
 <%@page import="java.util.Locale"%>
 <%@page import="java.util.TimeZone"%>
 <%@page import="java.util.Calendar"%>
-<%@page import="cn.rainier.nian.model.Menu"%>
 <%@page import="org.springframework.web.context.ContextLoader"%>
 <%@page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
