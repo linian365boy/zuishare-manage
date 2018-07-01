@@ -40,18 +40,6 @@ $(document).ready(function(){
 			"enName":{
 				required:true
 			},
-			"code":{
-				required:true,
-				remote:{
-					type:'POST',
-					url:'${ctx}/admin/sys/col/existCol',
-					data:{
-						ycode:function(){
-							return "${model.code}";
-						}
-					}
-				}
-			},
 			"priority":{
 				number:true
 			}
@@ -62,10 +50,6 @@ $(document).ready(function(){
 			},
 			"enName":{
 				required:"栏目名称不能为空"
-			},
-			"code":{
-				required:"栏目代码不能为空",
-				remote:"该栏目代码已存在，请更换！"
 			},
 			"priority":{
 				number:"请输入数字！"
@@ -115,12 +99,6 @@ $(document).ready(function(){
     <label for="enName" class="col-sm-2 control-label">英文名称<code>*</code></label>
     <div class="col-sm-8">
       <input type="text" class="form-control" id="enName" value="${model.enName }" name="enName" placeholder="名称">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="code" class="col-sm-2 control-label">代码<code>*</code></label>
-    <div class="col-sm-8">
-      <input type="text" class="form-control" id="code" value="${model.code }" name="code" placeholder="栏目代码">
     </div>
   </div>
   <div class="form-group">

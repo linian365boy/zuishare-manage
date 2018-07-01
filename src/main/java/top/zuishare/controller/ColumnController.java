@@ -94,7 +94,7 @@ public class ColumnController {
 				column.setDepth(1);
 			}
 		}
-		column.setUrl("views/col/" +column.getCode()+".htm");
+		column.setCode(column.getEnName().replace(" ",""));
 		if(columnService.save(column)){
 			logger.info("新增栏目:{}成功！",column);
 			vo.setMessage("新增栏目【"+column.getEnName()+"】成功！");
@@ -126,6 +126,7 @@ public class ColumnController {
 			}else{
 				column.setUrl(temp.getUrl());
 			}
+			column.setCode(column.getEnName().replace(" ",""));
 			columnService.updateColumn(column);
 			logger.info("修改栏目成功，原栏目信息：{}，修改后栏目信息：{}！",temp, column);
 			vo = new MessageVo(Constant.SUCCESS_CODE,"修改栏目"+column.getEnName()+"成功");
@@ -192,28 +193,5 @@ public class ColumnController {
 		}
 		return false;
 	}
-	
-	@RequestMapping(value={"/{id}/setPublishContent"},method = RequestMethod.GET)
-	public String setPublishContent(@PathVariable Integer id, ModelMap map){
-		Column column = columnService.getById(id);
-		map.put("column", column);
-		return "admin_unless/sys/col/setContent";
-	}
-	
-	@ResponseBody
-	@RequestMapping(value={"/{id}/setPublishContent"},method = RequestMethod.POST)
-	public MessageVo doPublishContent(@PathVariable Integer id, Column column){
-		logger.info("doPublishContent param  => {}", column);
-		MessageVo vo = null;
-		try{
-			columnService.updateColumnPublishContent(id,column);
-			logger.info("修改栏目的发布方式|{}",column);
-			vo = new MessageVo(Constant.SUCCESS_CODE,"设置发布模式成功！");
-		}catch(Exception e){
-			logger.error("设置发布模式发生错误！",e);
-			vo = new MessageVo(Constant.ERROR_CODE,"设置发布模式失败！");
-		}
-		logger.info("doPublishContent return data  => {}", vo);
-		return vo;
-	}
+
 }

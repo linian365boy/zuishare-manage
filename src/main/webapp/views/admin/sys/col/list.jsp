@@ -36,24 +36,9 @@
 				},"json");
 			});
 		};
-		var setPublishType = function(obj){
-			art.dialog.open("${ctx}/admin/sys/col/"+obj.id+"/setPublishContent",{
-				title:'发布内容设置',
-				id:'setPublish',
-				width: 768,
-				height: 300,
-				resize: false
-			});
-		};
 		$(function(){
 			 $('[data-toggle="tooltip"]').tooltip();
 		});
-		
-		var typeFormatter = function(value, row, index){
-			return row.type==1?"<a class='changeType' title='点击修改发布类型' href='javascript:void(0);'>产品列表</a>":
-				(row.type==0?"<a class='changeType' title='点击修改发布类型' href='javascript:void(0);'>信息列表</a>":
-					"<a class='changeType' title='点击修改发布类型' href='javascript:void(0);'>文章标题</a>");
-		};
 		
 		window.typeEvents = {
 			    'click .changeType': function (e, value, row, index) {
@@ -106,10 +91,8 @@
                 <tr> 
     				<th data-formatter="runningFormatter">序号</th>
 					<th data-field="enName">栏目名称(英文)</th>
-					<th data-field="code">栏目代码</th>
 					<th data-field="parentName">父级栏目</th>
 					<th data-field="priority">排序号</th>
-					<th data-formatter="typeFormatter" data-events="typeEvents">发布类型</th>
 					<th data-formatter="actionFormatter" data-events="actionEvents">操作</th>
 				</tr> 
                 </thead>
@@ -126,26 +109,7 @@
 					<td>
 						<input type="image" name="${column.id }" data-toggle="tooltip" data-placement="top" onclick="update(this);"
 						src="${ctx}/resources/images/icn_edit.png" title="修改"/>&nbsp;
-						<input type="image" name="${column.id }" onclick="setPublish(this);" 
-						src="${ctx}/resources/images/icn_publish.png" data-toggle="tooltip" data-placement="top" 
-						title="发布设置（当前使用
-						<c:choose>
-							<c:when test="${column.type==1 }">
-								产品列表
-							</c:when>
-							<c:otherwise>
-								<c:choose>
-									<c:when test="${column.type==0 }">
-										信息列表
-									</c:when>
-									<c:otherwise>
-										文章标题
-									</c:otherwise>
-								</c:choose>
-							</c:otherwise>
-						</c:choose>
-						模式发布）．设置时，其子栏目也会一起设置"/>&nbsp;
-						<input type="image" name="${column.id }" data-toggle="tool1tip" data-placement="top" onclick="del(this);" 
+						<input type="image" name="${column.id }" data-toggle="tool1tip" data-placement="top" onclick="del(this);"
 						src="${ctx}/resources/images/icn_trash.png" title="删除"/>&nbsp;&nbsp;
 					</td>
 				</tr>

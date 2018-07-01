@@ -262,18 +262,14 @@ public class ProductController {
 	
 	@ResponseBody
 	@RequestMapping(value="/{productId}/release",method= RequestMethod.POST)
-	public MessageVo releaseProduct(HttpServletRequest request, @PathVariable Integer productId, ModelMap map){
-        logger.info("release product param => {}, request param => {}", productId, request.getParameterMap());
+	public MessageVo releaseProduct(@PathVariable Integer productId, ModelMap map){
+        logger.info("release product param => {}", productId);
 		MessageVo vo = null;
 		Product temp = productService.loadProductById(productId);
-		String basePath = request.getScheme()+"://"+request.getServerName()+":"+
-				request.getServerPort()+request.getContextPath();
-		String realPath = systemConfig.getHtmlPath();
 		if(StringUtils.isBlank(temp.getUrl())){
 			temp.setUrl(Tools.getRndFilename()+".htm");
 		}
 		temp.setPublish(true);
-		//生产类似shtml文件（server side include方式嵌入页面），避免全部生成整套文件，需要组装太多数据
 		map.put("product", temp);
 		//查找相关连产品，根据keyWords
 		List<Product> products = 
@@ -281,16 +277,11 @@ public class ProductController {
 		if(!CollectionUtils.isEmpty(products)){
 			map.put("relatedProducts", products);
 		}
-		if(temp.isPublish()){
-			Tools.delFile(realPath + Constant.PRODUCTPATH +File.separator + temp.getUrl());
-		}
-		map.put("ctx", basePath);
-		//生成唯一的产品页面路径，不需要根据页码生成页面
-		if(FreemarkerUtil.fprint("productDetail.ftl", map, realPath + Constant.PRODUCTPATH, temp.getUrl())){
-			productService.updateProduct(temp);
-			vo = new MessageVo(Constant.SUCCESS_CODE,"生产产品【"+temp.getEnName()+"】页面成功！");
-		}else{
-			vo = new MessageVo(Constant.ERROR_CODE,"生产产品【"+temp.getEnName()+"】页面失败！");
+		productService.updateProduct(temp);
+		try {
+			vo = new MessageVo(Constant.SUCCESS_CODE, "产品【" + temp.getEnName() + "】发布成功！");
+		}catch(Exception e){
+			vo = new MessageVo(Constant.ERROR_CODE, "产品【" + temp.getEnName() + "】发布失败！");
 		}
 		logger.info("release product return data => {}", vo);
 		return vo;
