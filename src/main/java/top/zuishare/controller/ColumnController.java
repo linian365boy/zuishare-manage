@@ -24,7 +24,6 @@ import top.zuishare.vo.ReturnData;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -121,11 +120,6 @@ public class ColumnController {
 		try {
 			temp = columnService.getById(id);
 			column.setCreateDate(temp.getCreateDate());
-			if(!(column.getCode().equals(temp.getCode()))){
-				column.setUrl("views/col/" +column.getCode()+".htm");
-			}else{
-				column.setUrl(temp.getUrl());
-			}
 			column.setCode(column.getEnName().replace(" ",""));
 			columnService.updateColumn(column);
 			logger.info("修改栏目成功，原栏目信息：{}，修改后栏目信息：{}！",temp, column);
