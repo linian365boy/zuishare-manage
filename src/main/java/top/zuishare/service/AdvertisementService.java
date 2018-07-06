@@ -24,7 +24,6 @@ public class AdvertisementService {
 	
 	public void saveAdvertisement(Advertisement temp) {
 		advertisementDao.save(temp);
-		
 		// delete to redis
 		stringRedisTemplate.delete(RedisUtil.getAdsKey());
 	}
@@ -35,6 +34,8 @@ public class AdvertisementService {
 	
 	public void delAdvertisement(Integer id) {
 		advertisementDao.delete(id);
+		// delete to redis
+		stringRedisTemplate.delete(RedisUtil.getAdsKey());
 	}
 
 	public PageRainier<Advertisement> findAll(RequestParam param) {
@@ -51,6 +52,8 @@ public class AdvertisementService {
 			status = 0;
 		}
 		advertisementDao.updateStatus(id,status);
+		// delete to redis
+		stringRedisTemplate.delete(RedisUtil.getAdsKey());
 	}
 
 	public List<Advertisement> getIndexAds(int indexAdsSize) {
@@ -63,6 +66,8 @@ public class AdvertisementService {
 		try{
 			advertisementDao.updateAdvertisement(ad);
 			flag = true;
+			// delete to redis
+			stringRedisTemplate.delete(RedisUtil.getAdsKey());
 		}catch(Exception e){
 			logger.error("修改广告信息失败",e);
 		}

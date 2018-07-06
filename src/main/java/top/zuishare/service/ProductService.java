@@ -3,10 +3,15 @@ package top.zuishare.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
+
 import top.zuishare.dao.ProductDao;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Product;
+import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.PageRainier;
 
 import java.util.List;
@@ -15,6 +20,10 @@ import java.util.List;
 public class ProductService {
 	@Autowired
 	private ProductDao productDao;
+	@Autowired
+    private StringRedisTemplate stringRedisTemplate;
+	@Autowired
+    private Gson gson;
 	private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
 	public PageRainier<Product> findAll(RequestParam param) {
@@ -30,6 +39,9 @@ public class ProductService {
 
 	public void saveProduct(Product product) {
 		productDao.save(product);
+		//set to redis
+		stringRedisTemplate.opsForValue().set(RedisUtil.getProductDetailKey(product.getId()), gson.toJson(product));
+		stringRedisTemplate.opsForZSet().add(RedisUtil.getProductsKey(), String.valueOf(product.getId()), System.nanoTime());
 	}
 
 	public boolean delProduct(Integer productId) {
@@ -37,6 +49,9 @@ public class ProductService {
 		try{
 			productDao.delete(productId);
 			flag = true;
+			//delete from redis
+			stringRedisTemplate.delete(RedisUtil.getProductDetailKey(productId));
+			stringRedisTemplate.opsForZSet().remove(RedisUtil.getProductsKey(), String.valueOf(productId));
 		}catch(Exception e){
 			logger.error("删除产品失败！",e);
 		}
@@ -81,10 +96,6 @@ public class ProductService {
 		return productDao.countByColId(id);
 	}
 
-	public void insertOfBatch(List<Product> productList) {
-		productDao.save(productList);
-	}
-
 	public long countByCateId(int cateId) {
 		return productDao.countByCateId(cateId);
 	}
@@ -113,6 +124,8 @@ public class ProductService {
 		boolean flag = true;
 		try{
 			productDao.updateStatus(id,status);
+			//set to redis
+			stringRedisTemplate.opsForValue().set(RedisUtil.getProductDetailKey(id), gson.toJson(productDao.findOne(id)));
 		}catch(Exception e){
 			logger.error("修改产品的状态失败！",e);
 			flag = false;

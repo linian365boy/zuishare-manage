@@ -3,10 +3,12 @@ package top.zuishare.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import top.zuishare.dao.CategoryDao;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Category;
+import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.PageRainier;
 
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.List;
 public class CategoryService {
 	@Autowired
 	private CategoryDao categoryDao;
+	@Autowired
+    private StringRedisTemplate stringRedisTemplate;
 	private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
 
 	public PageRainier<Category> findAll(RequestParam param) {
@@ -38,6 +42,8 @@ public class CategoryService {
 
 	public void saveCategory(Category temp) {
 		categoryDao.save(temp);
+		// delete redis
+		stringRedisTemplate.delete(RedisUtil.getProductCatesKey());
 	}
 
 	public Category loadCategoryByName(String enName) {
@@ -46,6 +52,8 @@ public class CategoryService {
 
 	public void delCategory(Integer categoryId) {
 		categoryDao.delete(categoryId);
+		// delete redis
+		stringRedisTemplate.delete(RedisUtil.getProductCatesKey());
 	}
 
 	public boolean checkHasChildren(Integer cateId) {
@@ -59,16 +67,6 @@ public class CategoryService {
 	public long countByCateEname(String enName) {
 		return categoryDao.countByEname(enName);
 	}
-
-	/*private Specification<Category> countSpec(final String enName) {
-		return new Specification<Category>(){
-			@Override
-			public Predicate toPredicate(Root<Category> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
-				return cb.equal(root.<String>get("enName"), enName);
-			}
-		};
-	}*/
 
 	public Category loadCategoryByEname(String enName) {
 		return categoryDao.findOneByEnName(enName);
@@ -91,6 +89,8 @@ public class CategoryService {
 		try{
 			categoryDao.updateCategory(category);
 			flag = true;
+			// delete redis
+			stringRedisTemplate.delete(RedisUtil.getProductCatesKey());
 		}catch(Exception e){
 			logger.info("修改分类报错！",e);
 			flag = false;

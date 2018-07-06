@@ -1,20 +1,29 @@
 package top.zuishare.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
+
 import top.zuishare.dao.NewsDao;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.News;
+import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.PageRainier;
-
-import java.util.List;
 
 @Component("newsService")
 public class NewsService {
 	@Autowired
 	private NewsDao newsDao;
+	@Autowired
+    private StringRedisTemplate stringRedisTemplate;
+	@Autowired
+    private Gson gson;
 	private static Logger logger = LoggerFactory.getLogger(NewsService.class);
 	
 	public PageRainier<News> findAll(RequestParam param) {
@@ -29,6 +38,8 @@ public class NewsService {
 		try {
 			newsDao.save(news);
 			flag = true;
+			stringRedisTemplate.opsForValue().set(RedisUtil.getNewsDetailKey(news.getId()), gson.toJson(news));
+			stringRedisTemplate.opsForZSet().add(RedisUtil.getNewsKey(), String.valueOf(news.getId()), System.nanoTime());
 		} catch (Exception e) {
 			logger.error("添加新闻报错",e);
 		}
@@ -41,6 +52,9 @@ public class NewsService {
 	public boolean delNews(Integer newsId) {
 		try{
 			newsDao.delete(newsId);
+			//delete from redis
+			stringRedisTemplate.delete(RedisUtil.getNewsDetailKey(newsId));
+			stringRedisTemplate.opsForZSet().remove(RedisUtil.getNewsKey(), String.valueOf(newsId));
 			return true;
 		}catch(Exception e){
 			logger.error("删除新闻报错",e);
@@ -51,36 +65,13 @@ public class NewsService {
 	public void updateClicks(News news) {
 		try{
 			newsDao.updateClicks(news.getId(),news.getClicks()+1);
+			//set to redis
+			stringRedisTemplate.opsForValue().set(RedisUtil.getNewsDetailKey(news.getId()), gson.toJson(news));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 
-	public void insertOfBatch(List<News> tempNewsList) {
-		newsDao.save(tempNewsList);
-	}
-	
-	/*public Specification<News> countByColIdSpec(final Integer colId, final int depth){
-		return new Specification<News>(){
-			@Override
-			public Predicate toPredicate(Root<News> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
-				Predicate predicate = cb.and(cb.isNotNull(root.<Date>get("publishDate")),
-						cb.equal(root.get("column").<Integer>get("id"), colId));
-				if(1==depth){
-					//一级栏目
-					return cb.or(predicate,cb.like(root.<String>get("depth"),String.valueOf(colId)+"-%"));
-				}else if(2==depth){
-					//二级栏目
-					return cb.or(predicate,cb.like(root.<String>get("depth"), "%-"+String.valueOf(colId)+"-%"));
-				}else if(3==depth){
-					//三级栏目
-					return predicate;
-				}
-				return null;
-			}
-		};
-	}*/
 	
 	/**
 	 * 根据栏目id，查询该栏目下所有的文章，包括子栏目下的文章
@@ -94,8 +85,6 @@ public class NewsService {
 
 	public PageRainier<News> findAllByColId(RequestParam param,
 											Integer colId, int depth) {
-		//Page<News> tempPage = newsDao.findAll(countByColIdSpec(colId,depth), 
-		//		new PageRequest(pageNo-1,pageSize,new Sort(Direction.DESC,"id","priority")));
 		long count = newsDao.findAllCountByColId(colId,depth);
 		PageRainier<News> page = new PageRainier<News>(count);
 		page.setResult(newsDao.findList(param));
@@ -103,14 +92,14 @@ public class NewsService {
 	}
 
 	public List<News> findIndexPic(int indexNewsSize) {
-		//Page<News> tempPage = newsDao.findAll(findIndexNewsSpec(), 
-		//		new PageRequest(0,indexNewsSize,new Sort(Direction.DESC,"priority","createDate")));
 		return newsDao.findIndexNews(indexNewsSize);
 	}
 
 	public boolean updateNews(News news) {
 		try{
 			newsDao.updateNews(news);
+			//set to redis
+			stringRedisTemplate.opsForValue().set(RedisUtil.getNewsDetailKey(news.getId()), gson.toJson(news));
 			return true;
 		}catch(Exception e){
 			logger.error("删除新闻报错",e);
@@ -118,14 +107,4 @@ public class NewsService {
 		return false;
 	}
 
-	/*private Specification<News> findIndexNewsSpec() {
-		return new Specification<News>(){
-			@Override
-			public Predicate toPredicate(Root<News> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
-				return cb.and(cb.isNotNull(root.<Date>get("publishDate")));
-			}
-		};
-	}*/
-	
 }

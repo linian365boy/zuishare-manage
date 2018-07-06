@@ -1,16 +1,25 @@
 package top.zuishare.service;
 
 import com.google.gson.GsonBuilder;
+
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
 import top.zuishare.spi.dto.ConstantVariable;
 import top.zuishare.spi.model.Company;
+import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.spi.util.Tools;
+import top.zuishare.spi.constants.Constants;
 
 @Service("companyService")
 public class CompanyService {
-	
+	@Autowired
+    private StringRedisTemplate stringRedisTemplate;
 	private static final Logger logger = LoggerFactory.getLogger(CompanyService.class);
 
 	public Company loadCompany(String path) {
@@ -26,6 +35,8 @@ public class CompanyService {
 		if(Tools.saveOrUpdateWebConfig(path,jsonStr)){
 			flag = true;
 			logger.info("设置网公司信息成功！");
+			// set to redis
+			stringRedisTemplate.opsForValue().set(RedisUtil.getCompanyKey(), jsonStr, Constants.TIMEOUTDAYS, TimeUnit.DAYS);
 		}else{
 			logger.error("设置公司信息失败");
 		}

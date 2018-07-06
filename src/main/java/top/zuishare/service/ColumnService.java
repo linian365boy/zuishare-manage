@@ -3,10 +3,12 @@ package top.zuishare.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import top.zuishare.dao.ColumnDao;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Column;
+import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.PageRainier;
 
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.List;
 public class ColumnService {
 	@Autowired
 	private ColumnDao columnDao;
+	@Autowired
+    private StringRedisTemplate stringRedisTemplate;
 	private static Logger logger = LoggerFactory.getLogger(ColumnService.class);
 	
 	public Column getById(Integer id){
@@ -26,6 +30,8 @@ public class ColumnService {
 		try{
 			columnDao.save(column);
 			flag = true;
+			// delete redis
+			stringRedisTemplate.delete(RedisUtil.getColumnsKey());
 		}catch(Exception e){
 			logger.error("新增栏目报错",e);
 		}
@@ -41,6 +47,8 @@ public class ColumnService {
 
 	public void delete(Integer id) {
 		columnDao.delete(id);
+		// delete redis
+		stringRedisTemplate.delete(RedisUtil.getColumnsKey());
 	}
 
 	public List<Column> findParentByAjax() {
@@ -71,6 +79,8 @@ public class ColumnService {
 
 	public void updateColumnPublishContent(Integer id, Column column) {
 		columnDao.updateColumnPublishContent(id,column.getType(),column.isHasNeedForm());
+		// delete redis
+		stringRedisTemplate.delete(RedisUtil.getColumnsKey());
 	}
 
 	public List<Column> findList() {
@@ -79,6 +89,8 @@ public class ColumnService {
 
 	public void updateColumn(Column column) {
 		columnDao.updateColumn(column);
+		// delete redis
+		stringRedisTemplate.delete(RedisUtil.getColumnsKey());
 	}
 
 }
