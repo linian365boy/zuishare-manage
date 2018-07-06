@@ -1,24 +1,32 @@
 package top.zuishare.service;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
 import top.zuishare.dao.AdvertisementDao;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Advertisement;
+import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.PageRainier;
-
-import java.util.List;
 
 @Service("advertisementService")
 public class AdvertisementService {
+	private static final Logger logger = LoggerFactory.getLogger(AdvertisementService.class);
 	@Autowired
 	private AdvertisementDao advertisementDao;
-	private static final Logger logger = LoggerFactory.getLogger(AdvertisementService.class);
+	@Autowired
+    private StringRedisTemplate stringRedisTemplate;
 	
 	public void saveAdvertisement(Advertisement temp) {
 		advertisementDao.save(temp);
+		
+		// delete to redis
+		stringRedisTemplate.delete(RedisUtil.getAdsKey());
 	}
 	
 	public Advertisement loadAdvertisement(Integer id) {

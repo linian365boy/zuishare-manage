@@ -2,6 +2,7 @@ package top.zuishare.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,16 @@ public class NewsController {
 			news.setColumnId(firstColId);
 			news.setDepth(String.valueOf(firstColId));
 		}
+		String bref = Jsoup.parse(news.getContent()).text();
+        if(StringUtils.isNotBlank(bref)) {
+            if(bref.length() > systemConfig.getLimitSize()) {
+            	news.setBref(bref.substring(0, systemConfig.getLimitSize()));
+            }else{
+            	news.setBref(bref);
+            }
+        }else{
+        	news.setBref(news.getContent());
+        }
 		if(newsService.saveNews(news)){
 			logUtil.log(LogType.ADD,"标题："+news.getTitle());
 			logger.info("add news => {} succeed.",news);
@@ -136,6 +147,16 @@ public class NewsController {
 				news.setColumnId(firstColId);
 				news.setDepth(String.valueOf(firstColId));
 			}
+			String bref = Jsoup.parse(news.getContent()).text();
+	        if(StringUtils.isNotBlank(bref)) {
+	            if(bref.length() > systemConfig.getLimitSize()) {
+	            	news.setBref(bref.substring(0, systemConfig.getLimitSize()));
+	            }else{
+	            	news.setBref(bref);
+	            }
+	        }else{
+	        	news.setBref(news.getContent());
+	        }
 			if(newsService.updateNews(news)){
 				logger.info("update from news => {}, to => {}", temp, news);
 				if(!temp.getTitle().equals(news.getTitle())){

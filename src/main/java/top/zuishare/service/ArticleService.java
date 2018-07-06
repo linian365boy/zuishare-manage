@@ -1,21 +1,23 @@
 package top.zuishare.service;
 
-import com.google.gson.Gson;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
+
 import top.zuishare.dao.ArticleDao;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Article;
+import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.Constant;
 import top.zuishare.util.PageRainier;
-import top.zuishare.util.RedisUtil;
 import top.zuishare.vo.ArticleQueryVo;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author niange
