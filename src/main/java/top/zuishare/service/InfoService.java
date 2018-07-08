@@ -1,12 +1,15 @@
 package top.zuishare.service;
 
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import top.zuishare.dao.InfoDao;
 import top.zuishare.spi.model.Info;
 import top.zuishare.spi.dto.request.RequestParam;
+import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.PageRainier;
 
 import java.util.List;
@@ -15,6 +18,10 @@ import java.util.List;
 public class InfoService {
 	@Autowired
 	private InfoDao infoDao;
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
+	@Autowired
+	private Gson gson;
 	private static final Logger logger = LoggerFactory.getLogger(InfoService.class);
 	
 	public PageRainier<Info> findAll(RequestParam param) {
@@ -36,6 +43,7 @@ public class InfoService {
 		try{
 			infoDao.save(info);
 			flag = true;
+			stringRedisTemplate.opsForValue().set(RedisUtil.getInfoKeyByCode(info.getCode()), gson.toJson(info));
 		}catch(Exception e){
 			logger.info("新增信息失败，报错",e);
 		}
@@ -51,6 +59,7 @@ public class InfoService {
 		try{
 			infoDao.delete(info);
 			flag = true;
+			stringRedisTemplate.delete(RedisUtil.getInfoKeyByCode(info.getCode()));
 		}catch(Exception e){
 			logger.error("删除信息失败",e);
 		}
@@ -66,6 +75,7 @@ public class InfoService {
 		try{
 			infoDao.updateInfo(info);
 			flag = true;
+			stringRedisTemplate.opsForValue().set(RedisUtil.getInfoKeyByCode(info.getCode()), gson.toJson(info));
 		}catch(Exception e){
 			logger.info("新增信息失败，报错",e);
 		}

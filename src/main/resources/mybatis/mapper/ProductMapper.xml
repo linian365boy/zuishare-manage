@@ -27,7 +27,7 @@
 		delete from tb_product where id=#{id}
 	</delete>
 	
-	<insert id="save">
+	<insert id="save" parameterType="Product" keyColumn="id" useGeneratedKeys="true" keyProperty="id">
 		insert into tb_product(id,enName,categoryId,picUrl,introduce,description,hot,url,publish,
 		createDate,createUserId,status,keyWords,priority) 
 		values(null,#{enName},#{categoryId},#{picUrl},#{introduce},#{description},#{hot},#{url},
