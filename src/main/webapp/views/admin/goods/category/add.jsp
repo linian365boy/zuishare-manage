@@ -78,41 +78,11 @@
 		});
 	});
 	
-	function changeCol(obj){
-		var colId = $(obj).val();
-		$.post("${ctx }/admin/sys/col/getChildren/"+colId+"",{
-			id:colId
-		},function(json){
-			$(obj).next().remove();
-			var html = "";
-			if(json.length>0){
-				html+='<select class="col-xs-5 selectpicker" name="secondCol" >';
-				html+="<option value='0'>==请选择==</option>";
-				$.each(json,function(i,n){
-					html+="<option value='"+n.id+"'>"+n.name+"</option>";
-				});
-				html+="</select>";
-			}
-			$(obj).after(html);
-		},"json");
-	};
 	</script>
 </head>
 <body>
 	<form id="form" class="form-horizontal content" action="${ctx }/admin/goods/category/add" 
 		method="post" target="_parent">
-			<div class="form-group">
-			    <label for="parentCs" class="col-sm-2 control-label">所属栏目</label>
-			    	<div class="col-xs-8" style="overflow:hidden;">
-			    		<c:if test="${fn:length(parentCol)>0 }">
-			    			<select class="col-xs-5 selectpicker" name="parentCol" onchange="changeCol(this);">
-				    			<c:forEach items="${parentCol }" var="col">
-				    				<option value="${col.id }">${col.name }</option>
-				    			</c:forEach>
-				      		</select>
-			    		</c:if>
-			    	</div>
-			  </div>
              <div class="form-group">
 			    <label for="parentCs" class="col-sm-2 control-label">父级分类</label>
 				     <div class="col-sm-8" style="overflow:hidden;">

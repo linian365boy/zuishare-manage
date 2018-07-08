@@ -41,7 +41,8 @@ public class ProductService {
 		productDao.save(product);
 		//set to redis
 		stringRedisTemplate.opsForValue().set(RedisUtil.getProductDetailKey(product.getId()), gson.toJson(product));
-		stringRedisTemplate.opsForZSet().add(RedisUtil.getProductsKey(), String.valueOf(product.getId()), System.nanoTime());
+		long autoId = stringRedisTemplate.opsForValue().increment(RedisUtil.getGenerateIncreaseKey(), 1);
+		stringRedisTemplate.opsForZSet().add(RedisUtil.getProductsKey(), String.valueOf(product.getId()), System.currentTimeMillis()+autoId);
 	}
 
 	public boolean delProduct(Integer productId) {

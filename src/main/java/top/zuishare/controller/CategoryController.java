@@ -69,9 +69,6 @@ public class CategoryController {
 	
 	@RequestMapping(value="/add",method= RequestMethod.GET)
 	public String add(ModelMap map) {
-		//获取一级栏目
-		List<Column> parentCol = columnService.findParentByAjax();
-		map.put("parentCol", parentCol);
 		return "admin_unless/goods/category/add";
 	}
 	
@@ -81,15 +78,6 @@ public class CategoryController {
 		User u = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		MessageVo vo = null;
 		try {
-			String secondColStr = request.getParameter("secondCol");
-			if(StringUtils.isNotBlank(secondColStr) 
-					&& !("0".equals(secondColStr))){
-				//有二级栏目
-				category.setColumnId(Integer.parseInt(secondColStr));
-			}else{
-				//只选择一级栏目
-				category.setColumnId(Integer.parseInt(request.getParameter("parentCol")));
-			}
 			if(Integer.parseInt(request.getParameter("parentC"))==0){
 				category.setParentId(null);
 			}else{
@@ -123,16 +111,8 @@ public class CategoryController {
 		if (categoryId != null) {
 			Category category = categoryService.loadCategoryById(categoryId);
 			model.addAttribute("model",category);
-			Column column = columnService.getById(category.getColumnId());
-			model.addAttribute("column", column);
-			if(column.getParentId()!=null){
-				model.addAttribute("parentColumn", columnService.getById(column.getParentId()));
-			}
 			List<Category> parentsByAjax = categoryService.findParentByAjax();
 			parentsByAjax.add(0, new Category(0,"根节点","root note"));
-			//获取一级栏目
-			List<Column> parentCol = columnService.findParentByAjax();
-			model.addAttribute("parentCol", parentCol);
 			model.addAttribute("parents", parentsByAjax);
 		}
 		return "admin_unless/goods/category/update";
@@ -148,15 +128,6 @@ public class CategoryController {
 			if(categoryId!=null){
 				Category temp = categoryService.loadCategoryById(categoryId);
 				String parentIds = (String)request.getParameter("parents");
-				String secondColStr = request.getParameter("secondCol");
-				if(StringUtils.isNotBlank(secondColStr) 
-						&& !("0".equals(secondColStr))){
-					//有二级栏目
-					category.setColumnId(Integer.parseInt(secondColStr));
-				}else{
-					//只选择一级栏目
-					category.setColumnId(Integer.parseInt(request.getParameter("parentCol")));
-				}
 				if(parentIds!=null){
 					category.setParentId(Integer.parseInt(parentIds));
 				}

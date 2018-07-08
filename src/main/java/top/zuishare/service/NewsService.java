@@ -39,7 +39,8 @@ public class NewsService {
 			newsDao.save(news);
 			flag = true;
 			stringRedisTemplate.opsForValue().set(RedisUtil.getNewsDetailKey(news.getId()), gson.toJson(news));
-			stringRedisTemplate.opsForZSet().add(RedisUtil.getNewsKey(), String.valueOf(news.getId()), System.nanoTime());
+			long autoId = stringRedisTemplate.opsForValue().increment(RedisUtil.getGenerateIncreaseKey(), 1);
+			stringRedisTemplate.opsForZSet().add(RedisUtil.getNewsKey(), String.valueOf(news.getId()), System.currentTimeMillis()+autoId);
 		} catch (Exception e) {
 			logger.error("添加新闻报错",e);
 		}
