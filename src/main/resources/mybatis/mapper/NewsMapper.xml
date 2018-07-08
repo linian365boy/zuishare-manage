@@ -14,14 +14,14 @@
 	<update id="updateClicks">
 		update News set clicks = #{clicks} where id = #{newsId}
 	</update>
-	<insert id="save">
-		insert into tb_news(id,title,introduce,content,priority,url,createDate,publishDate,clicks,keyWords,columnId,type,depth) 
-		values(null,#{title},#{introduce},#{content},#{priority},#{url},#{createDate},#{publishDate},#{clicks},#{keyWords},#{columnId},#{type},#{depth})
+	<insert id="save" parameterType="News" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		insert into tb_news(id,title,introduce,content,priority,url,createDate,publishDate,clicks,keyWords,columnId,type,depth,bref)
+		values(null,#{title},#{introduce},#{content},#{priority},#{url},#{createDate},#{publishDate},#{clicks},#{keyWords},#{columnId},#{type},#{depth},#{bref})
 	</insert>
 	
 	<update id="updateNews">
 		update tb_news set title=#{title},introduce=#{introduce},content=#{content},priority=#{priority},
-		url=#{url},keyWords=#{keyWords},columnId=#{columnId},type=#{type},depth=#{depth} where id=#{id}
+		url=#{url},keyWords=#{keyWords},type=#{type},depth=#{depth},bref=#{bref},publishDate=#{publishDate} where id=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="int">
@@ -41,8 +41,8 @@
 	</select>
 	
 	<select id="findList" resultMap="NewsMap" parameterType="top.zuishare.spi.dto.request.RequestParam">
-		select tn.id,tn.title,tn.priority,tn.url,tn.createDate,tn.publishDate,tc.name as columnName 
-		from tb_news tn inner join tb_column tc on tn.columnId=tc.id 
+		select tn.id,tn.title,tn.priority,tn.url,tn.createDate,tn.publishDate
+		from tb_news tn
 		<where>
 			<if test="search!=null and search!=''">
 				title like concat('%',#{search},'%') or introduce like concat ('%',#{search},'%')

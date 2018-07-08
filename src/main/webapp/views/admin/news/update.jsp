@@ -55,24 +55,6 @@
 		CKEDITOR.replace('content');
 	});
 	
-	function changeCol(obj){
-		var colId = $(obj).val();
-		$.post("${ctx }/admin/sys/col/getChildren/"+colId+"",{
-			id:colId
-		},function(json){
-			$(obj).next().remove();
-			var html = "";
-			if(json.length>0){
-				html+='<select class="col-xs-5 selectpicker" name="secondColId" >';
-				html+='<option value="">--请选择--</option>';
-				$.each(json,function(i,n){
-					html+="<option value='"+n.id+"'>"+n.name+"</option>";
-				});
-				html+="</select>";
-			}
-			$(obj).after(html);
-		},"json");
-	};
 </script>
 	
 	<section class="content-header">
@@ -97,54 +79,6 @@
 				</div>
 		<form action="${ctx }/admin/news/${news.id}/update" class="form-horizontal" id="form" method="post">
 			<div class="box-body">
-			<div class="form-group">
-			    <label for="title" class="col-sm-2 control-label">栏目<code>*</code></label>
-			    <div class="row">
-			    	<div class="col-xs-8" style="overflow:hidden;">
-			    			<select class="col-xs-5 selectpicker" name="firstColId" onchange="changeCol(this);">
-			    				<option value="">--请选择--</option>
-			    				<c:forEach items="${parentCol }" var="col">
-				    				<c:choose>
-				    					<c:when test="${empty (column.parentId) }">
-				    						<c:choose>
-						    					<c:when test="${column.id==col.id }">
-						    						<option value="${col.id }" selected="selected">${col.name }</option>
-						    					</c:when>
-						    					<c:otherwise>
-						    						<option value="${col.id }">${col.name }</option>
-						    					</c:otherwise>
-						    				</c:choose>
-				    					</c:when>
-				    					<c:otherwise>
-				    						<c:choose>
-						    					<c:when test="${column.parentId==col.id }">
-						    						<option value="${col.id }" selected="selected">${col.name }</option>
-						    					</c:when>
-						    					<c:otherwise>
-						    						<option value="${col.id }">${col.name }</option>
-						    					</c:otherwise>
-						    				</c:choose>
-				    					</c:otherwise>
-				    				</c:choose>
-				    			</c:forEach>
-				      		</select>
-				      		<c:forEach items="${childs }" var="childColumn">
-					      		<select class="col-xs-5 selectpicker" name="secondColId" >
-				      				<c:choose>
-					      				<c:when test="${not empty (column.parentId) }">
-								      			<option value='${column.id }' selected="selected">${column.name }</option>
-						      			</c:when>
-						      			<c:otherwise>
-						      					<option value='' selected="selected">--请选择--</option>
-						      			</c:otherwise>
-				      				</c:choose>
-				      				<option value='${childColumn.id }'>${childColumn.name }</option>
-							      </select>
-				      		</c:forEach>
-			    	</div>
-			    </div>
-		   </div>
-		   
 		   <div class="form-group">
 			    <label for="title" class="col-sm-2 control-label">标题<code>*</code></label>
 			    <div class="col-sm-8">

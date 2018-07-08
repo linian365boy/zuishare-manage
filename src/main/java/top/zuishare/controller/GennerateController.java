@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.zuishare.model.Info;
 import top.zuishare.service.*;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.*;

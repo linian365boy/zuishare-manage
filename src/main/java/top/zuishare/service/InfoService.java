@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import top.zuishare.dao.InfoDao;
-import top.zuishare.model.Info;
+import top.zuishare.spi.model.Info;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.util.PageRainier;
 

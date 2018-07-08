@@ -137,7 +137,6 @@
                 <tr> 
     				<th data-formatter="runningFormatter">序号</th>
 					<th data-field="title">新闻标题</th>
-					<th data-field="columnName">所在栏目</th>
 					<th data-field="createDate">创建日期</th>
 					<th data-formatter="publishDateFormatter">发布日期</th>
 					<th data-field="priority">优先值</th>

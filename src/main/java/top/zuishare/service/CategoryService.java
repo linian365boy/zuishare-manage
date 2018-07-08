@@ -1,5 +1,6 @@
 package top.zuishare.service;
 
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class CategoryService {
 	private CategoryDao categoryDao;
 	@Autowired
     private StringRedisTemplate stringRedisTemplate;
+	@Autowired
+	private Gson gson;
 	private static final Logger logger = LoggerFactory.getLogger(CategoryService.class);
 
 	public PageRainier<Category> findAll(RequestParam param) {
@@ -44,6 +47,7 @@ public class CategoryService {
 		categoryDao.save(temp);
 		// delete redis
 		stringRedisTemplate.delete(RedisUtil.getProductCatesKey());
+		logger.info("String Redis Template =>{}, gson=>{}",stringRedisTemplate, gson);
 	}
 
 	public Category loadCategoryByName(String enName) {

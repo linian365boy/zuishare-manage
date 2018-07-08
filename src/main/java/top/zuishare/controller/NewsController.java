@@ -62,9 +62,6 @@ public class NewsController {
 	
 	@RequestMapping(value="/add",method= RequestMethod.GET)
 	public String add(ModelMap map){
-		//获取一级栏目
-		List<Column> parentCol = columnService.findParentByAjax();
-		map.put("parentCol", parentCol);
 		return "admin/news/add";
 	}
 	
@@ -112,27 +109,15 @@ public class NewsController {
 	
 	@RequestMapping(value="/{newsId}/update",method= RequestMethod.GET)
 	public String update(@PathVariable Integer newsId, ModelMap map){
-		if(newsId!=null){
-			News news = newsService.loadNews(newsId);
-			Column temp = columnService.getById(news.getColumnId());
-			if(temp.getParentId()==null){
-				map.addAttribute("childs",columnService.findChildrenByParentId(temp.getId()));
-			}else{
-				map.addAttribute("childs",columnService.findChildrenByParentId(temp.getParentId()));
-			}
-			map.put("news", news);
-			map.put("column", temp);
-		}
-		List<Column> parentCol = columnService.findParentByAjax();
-		map.put("parentCol", parentCol);
+		map.put("news", newsService.loadNews(newsId));
 		return "admin/news/update";
 	}
 	
 	@ResponseBody
 	@RequestMapping(value="/{newsId}/update",method= RequestMethod.POST)
 	public MessageVo update(HttpServletRequest request,
-                            @PathVariable Integer newsId, News news, Integer firstColId, Integer secondColId){
-        logger.info("update news firstColId => {}, secondColId => {}, news => {}", firstColId, secondColId, news);
+                            @PathVariable Integer newsId, News news){
+        logger.info("update news news => {}", news);
 		MessageVo vo = null;
 		if(newsId!=null){
 			StringBuilder content = new StringBuilder();
@@ -140,13 +125,7 @@ public class NewsController {
 			news.setCreateDate(temp.getCreateDate());
 			news.setClicks(temp.getClicks());
 			news.setUrl(temp.getUrl());
-			if(secondColId !=null && secondColId !=0 ){
-				news.setColumnId(secondColId);
-				news.setDepth(firstColId+"-"+secondColId);
-			}else{
-				news.setColumnId(firstColId);
-				news.setDepth(String.valueOf(firstColId));
-			}
+			news.setPublishDate(temp.getPublishDate());
 			String bref = Jsoup.parse(news.getContent()).text();
 	        if(StringUtils.isNotBlank(bref)) {
 	            if(bref.length() > systemConfig.getLimitSize()) {
@@ -243,37 +222,17 @@ public class NewsController {
 	public MessageVo releaseNews(@PathVariable Integer newsId, HttpServletRequest request, ModelMap map){
 	    logger.info("release news newsId => {}", newsId);
 		MessageVo vo = new MessageVo();
-		String fPath = null;
-		String basePath = request.getScheme()+"://"+request.getServerName()+":"+
-				request.getServerPort()+request.getContextPath();
-		String realPath = systemConfig.getHtmlPath();
 		News tempNews = newsService.loadNews(newsId);
 		tempNews.setPublishDate(new Date());
 		if(StringUtils.isBlank(tempNews.getUrl())){
 			tempNews.setUrl(Tools.getRndFilename()+".htm");
 		}
 		logUtil.log(LogType.PUBLISH, "标题："+tempNews.getTitle());
-		if(tempNews.getPublishDate()!=null){
-			 fPath = realPath +Constant.NEWSPATH+File.separator+tempNews.getUrl();
-			 FileUtil.delFile(fPath);
-		}
-		map.put("ctx", basePath);
 		map.put("model", tempNews);
-		//生成唯一的新闻页面路径，不需要根据页码生成页面
-		if(FreemarkerUtil.fprint("newsDetail.ftl", map, realPath+Constant.NEWSPATH, tempNews.getUrl())){
-			if(newsService.saveNews(tempNews)){
-				vo.setCode(Constant.SUCCESS_CODE);
-				vo.setData(DateFormatUtils.format(new Date(), ConstantVariable.DFSTR));
-				logger.info("release news => {} succeed.",tempNews);
-			}else{
-				vo.setCode(Constant.ERROR_CODE);
-				vo.setMessage("发布新闻失败！");
-				logger.error("release news => {} fail.",tempNews);
-			}
-		}else{
-			vo.setCode(Constant.ERROR_CODE);
-			vo.setMessage("发布新闻失败！");
-			logger.error("release news => {} freemarker fail.",tempNews);
+		if(newsService.updateNews(tempNews)) {
+			vo.setCode(Constant.SUCCESS_CODE);
+			vo.setData(DateFormatUtils.format(new Date(), ConstantVariable.DFSTR));
+			logger.info("release news => {} succeed.", tempNews);
 		}
         logger.info("release news return data => {}", vo);
 		return vo;

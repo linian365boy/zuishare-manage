@@ -55,25 +55,6 @@
 		CKEDITOR.replace('content');
 	});
 	
-	function changeCol(obj){
-		var colId = $(obj).val();
-		$.post("${ctx }/admin/sys/col/getChildren/"+colId+"",{
-			id:colId
-		},function(json){
-			$(obj).next().remove();
-			var html = "";
-			if(json.length>0){
-				html+='<select class="col-xs-5 selectpicker" name="secondColId" >';
-				html+='<option value="">--请选择--</option>';
-				$.each(json,function(i,n){
-					html+="<option value='"+n.id+"'>"+n.name+"</option>";
-				});
-				html+="</select>";
-			}
-			$(obj).after(html);
-		},"json");
-	};
-	
 </script>
 	
 	<section class="content-header">
@@ -98,21 +79,6 @@
 				</div>
 		<form action="${ctx }/admin/news/add" class="form-horizontal" id="form" method="post">
 			<div class="box-body">
-			<div class="form-group">
-			    <label class="col-sm-2 control-label">栏目<code>*</code></label>
-			    <div class="row">
-			    	<div class="col-xs-8" style="overflow:hidden;">
-			    		<c:if test="${fn:length(parentCol)>0 }">
-			    			<select class="col-xs-5 selectpicker" name="firstColId" onchange="changeCol(this);">
-			    				<option value="">--请选择--</option>
-				    			<c:forEach items="${parentCol }" var="col">
-				    				<option value="${col.id }">${col.name }</option>
-				    			</c:forEach>
-				      		</select>
-			    		</c:if>
-			    	</div>
-			    </div>
-		   </div>
 			<div class="form-group">
 			    <label for="title" class="col-sm-2 control-label">标题<code>*</code></label>
 			    <div class="col-sm-8">
