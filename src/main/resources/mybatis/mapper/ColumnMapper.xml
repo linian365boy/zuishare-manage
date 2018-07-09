@@ -5,7 +5,6 @@
 		<id column="id" property="id" jdbcType="INTEGER"/>
 		<result column="name" property="name" jdbcType="VARCHAR"/>
 		<result column="enName" property="enName" jdbcType="VARCHAR"/>
-		<result column="url" property="url" jdbcType="VARCHAR"/>
 		<result column="parentId" property="parentId" jdbcType="INTEGER"/>
 		<result column="priority" property="priority" jdbcType="INTEGER"/>
 		<result column="createDate" property="createDate" jdbcType="TIMESTAMP"/>
@@ -21,7 +20,6 @@
 		<id column="id" property="id" jdbcType="INTEGER"/>
 		<result column="name" property="name" jdbcType="VARCHAR"/>
 		<result column="enName" property="enName" jdbcType="VARCHAR"/>
-		<result column="url" property="url" jdbcType="VARCHAR"/>
 		<result column="parentId" property="parentId" jdbcType="INTEGER"/>
 		<result column="priority" property="priority" jdbcType="INTEGER"/>
 		<result column="createDate" property="createDate" jdbcType="TIMESTAMP"/>
@@ -59,12 +57,12 @@
 	</select>
 	
 	<select id="save" parameterType="Column">
-		insert into tb_column(id,name,enName,url,parentId,priority,createDate,code,depth,type,hasNeedForm) 
-		values(null,#{name},#{enName},#{url},#{parentId},#{priority},#{createDate},#{code},#{depth},#{type},#{hasNeedForm})
+		insert into tb_column(id,name,enName,parentId,priority,createDate,code,depth,type,hasNeedForm) 
+		values(null,#{name},#{enName},#{parentId},#{priority},#{createDate},#{code},#{depth},#{type},#{hasNeedForm})
 	</select>
 	
 	<update id="updateColumn" parameterType="Column">
-		update tb_column set name=#{name},enName=#{enName},url=#{url},priority=#{priority},code=#{code},parentId=#{parentId} where id=#{id}
+		update tb_column set name=#{name},enName=#{enName},priority=#{priority},code=#{code},parentId=#{parentId} where id=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="int">
