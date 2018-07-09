@@ -188,6 +188,8 @@ public class ProductService {
 
 	public void updateProduct(Product product) {
 		productDao.updateProduct(product);
+		stringRedisTemplate.opsForValue().set(RedisUtil.getProductDetailKey(product.getId()), gson.toJson(product));
+		
 	}
 
 	/*private Specification<Product> findAllReleaseProductByLikeKeywordSpec(final String keyword) {
