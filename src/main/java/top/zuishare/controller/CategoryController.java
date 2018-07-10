@@ -128,7 +128,7 @@ public class CategoryController {
 			if(categoryId!=null){
 				Category temp = categoryService.loadCategoryById(categoryId);
 				String parentIds = (String)request.getParameter("parents");
-				if(parentIds!=null){
+				if(parentIds!=null && !parentIds.equals("0")){
 					category.setParentId(Integer.parseInt(parentIds));
 				}
 				if(!temp.getEnName().equals(category.getEnName())){

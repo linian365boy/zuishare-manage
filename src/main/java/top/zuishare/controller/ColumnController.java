@@ -93,7 +93,8 @@ public class ColumnController {
 				column.setDepth(1);
 			}
 		}
-		column.setCode(column.getEnName().replace(" ",""));
+		column.setCode(column.getEnName().substring(0,1).toLowerCase() +
+				column.getEnName().substring(1).replace(" ",""));
 		if(columnService.save(column)){
 			logger.info("新增栏目:{}成功！",column);
 			vo.setMessage("新增栏目【"+column.getEnName()+"】成功！");
@@ -119,8 +120,10 @@ public class ColumnController {
 		MessageVo vo = null;
 		try {
 			temp = columnService.getById(id);
+			column.setParentId((column.getParentId()!=null && column.getParentId() == 0) ? null : column.getParentId());
 			column.setCreateDate(temp.getCreateDate());
-			column.setCode(column.getEnName().replace(" ",""));
+			column.setCode(column.getEnName().substring(0,1).toLowerCase() +
+					column.getEnName().substring(1).replace(" ",""));
 			columnService.updateColumn(column);
 			logger.info("修改栏目成功，原栏目信息：{}，修改后栏目信息：{}！",temp, column);
 			vo = new MessageVo(Constant.SUCCESS_CODE,"修改栏目"+column.getEnName()+"成功");
