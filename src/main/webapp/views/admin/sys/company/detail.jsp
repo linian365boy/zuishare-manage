@@ -163,9 +163,9 @@
 					    </div>
 				   </div>
 				   <div class="form-group">
-					    <label for="contactUsergooglePlus" class="col-sm-2 control-label">联系人Google+</label>
+					    <label for="contactUserlinkedin" class="col-sm-2 control-label">联系人Linkedin</label>
 					    <div class="col-sm-8">
-					      <input id="contactUsergooglePlus" class="form-control" name="contactUsergooglePlus" value="${model.contactUsergooglePlus }"/>
+					      <input id="contactUserlinkedin" class="form-control" name="contactUserlinkedin" value="${model.contactUserlinkedin }"/>
 					    </div>
 				   </div>
 				   <div class="form-group">
