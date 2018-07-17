@@ -85,6 +85,7 @@
 					<th data-field="parentName">父级分类</th>
 					<th data-field="name">名称（中）</th>
 					<th data-field="enName">名称（英）</th>
+					<th data-field="priority">排序号</th>
 					<th data-field="createDate">创建日期</th>
 					<th data-formatter="actionFormatter" data-events="actionEvents">操作</th>
 				</tr> 

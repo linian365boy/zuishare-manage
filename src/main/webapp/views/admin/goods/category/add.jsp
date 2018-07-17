@@ -33,6 +33,9 @@
 				"name":{
 					required:true
 				},
+				"priority":{
+				    number:true
+				},
 				"enName":{
 					required:true,
 					remote:{
@@ -49,6 +52,9 @@
 			messages:{
 				"name":{
 					required:"商品分类不能为空"
+				},
+				"priority":{
+				    number:"排序号为数字！"
 				},
 				"enName":{
 					required:"商品分类不能为空",
@@ -102,6 +108,12 @@
 			      <input type="text" class="form-control" id="enName" name="enName" placeholder="名称">
 			    </div>
 			  </div>
+			  <div class="form-group">
+                <label for="enName" class="col-sm-2 control-label">排序号<code>*</code></label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="priority" name="priority" placeholder="排序号（越大排名越前）">
+                </div>
+              </div>
 			  <div class="form-group">
 			    <label for="remark" class="col-sm-2 control-label">备注</label>
 			    <div class="col-sm-8">

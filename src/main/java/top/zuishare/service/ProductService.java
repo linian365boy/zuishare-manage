@@ -13,6 +13,7 @@ import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Product;
 import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.PageRainier;
+import top.zuishare.util.RedisHelper;
 
 import java.util.List;
 
@@ -42,7 +43,8 @@ public class ProductService {
 		//set to redis
 		stringRedisTemplate.opsForValue().set(RedisUtil.getProductDetailKey(product.getId()), gson.toJson(product));
 		long autoId = stringRedisTemplate.opsForValue().increment(RedisUtil.getGenerateIncreaseKey(), 1);
-		stringRedisTemplate.opsForZSet().add(RedisUtil.getProductsKey(), String.valueOf(product.getId()), System.currentTimeMillis()+autoId);
+		stringRedisTemplate.opsForZSet().add(RedisUtil.getProductsKey(), String.valueOf(product.getId()),
+				RedisHelper.getZsetScore(product.getPriority(), autoId));
 	}
 
 	public boolean delProduct(Integer productId) {

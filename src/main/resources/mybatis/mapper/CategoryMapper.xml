@@ -9,6 +9,7 @@
 		<result column="createDate" property="createDate" jdbcType="DATE" javaType="java.util.Date"/>
 		<result column="createUserId" property="createUserId" jdbcType="INTEGER"/>
 		<result column="columnId" property="columnId" jdbcType="INTEGER"/>
+		<result column="priority" property="priority" jdbcType="INTEGER"/>
 		<result column="remark" property="remark" jdbcType="VARCHAR"/>
 		
 		<result column="parentName" property="parentName" jdbcType="VARCHAR"/>
@@ -20,6 +21,7 @@
 		<result column="enName" property="enName" jdbcType="VARCHAR"/>
 		<result column="parentId" property="parentId" jdbcType="INTEGER"/>
 		<result column="columnId" property="columnId" jdbcType="INTEGER"/>
+		<result column="priority" property="priority" jdbcType="INTEGER"/>
 		<result column="remark" property="remark" jdbcType="VARCHAR"/>
 		<collection property="children" ofType="Category">
 			<id column="child_id" property="id" jdbcType="INTEGER"/>
@@ -70,7 +72,7 @@
 				c1.name like concat('%',#{search},'%') or c1.enName like concat ('%',#{search},'%')
 			</if>
 		</where>
-		order by c1.createDate desc,c1.id desc limit #{offset},#{limit}
+		order by c1.priority desc,c1.id desc limit #{offset},#{limit}
 	</select>
 	
 	<select id="findOneById" parameterType="int" resultMap="CategoryChildMap">
@@ -79,13 +81,13 @@
 	</select>
 	
 	<insert id="save">
-		insert into tb_category(id,name,enName,parentId,createDate,createUserId,columnId,remark) 
-		values(null,#{name},#{enName},#{parentId},#{createDate},#{createUserId},#{columnId},#{remark})
+		insert into tb_category(id,name,enName,parentId,createDate,createUserId,columnId,remark,priority)
+		values(null,#{name},#{enName},#{parentId},#{createDate},#{createUserId},#{columnId},#{remark},#{priority})
 	</insert>
 	
 	<update id="updateCategory" parameterType="Category">
 		update tb_category set name=#{name},enName=#{enName},parentId=#{parentId},
-		columnId=#{columnId},remark=#{remark} where id=#{id}
+		columnId=#{columnId},remark=#{remark},priority=#{priority} where id=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="int">
