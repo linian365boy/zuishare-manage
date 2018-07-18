@@ -204,6 +204,7 @@ public class ProductService {
 			stringRedisTemplate.delete(RedisUtil.getProductDetailKey(product.getId()));
 			stringRedisTemplate.opsForZSet().remove(RedisUtil.getProductsKey(), String.valueOf(product.getId()));
 		}
+		stringRedisTemplate.delete(RedisUtil.getHotProductsKey());
 	}
 
 	/*private Specification<Product> findAllReleaseProductByLikeKeywordSpec(final String keyword) {
