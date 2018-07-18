@@ -1,21 +1,18 @@
 package top.zuishare.service;
 
-import java.util.List;
-
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-
-import com.google.gson.Gson;
-
 import top.zuishare.dao.NewsDao;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.News;
 import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.PageRainier;
-import top.zuishare.util.RedisHelper;
+
+import java.util.List;
 
 @Component("newsService")
 public class NewsService {
@@ -39,10 +36,6 @@ public class NewsService {
 		try {
 			newsDao.save(news);
 			flag = true;
-			stringRedisTemplate.opsForValue().set(RedisUtil.getNewsDetailKey(news.getId()), gson.toJson(news));
-			long autoId = stringRedisTemplate.opsForValue().increment(RedisUtil.getGenerateIncreaseKey(), 1);
-			stringRedisTemplate.opsForZSet().add(RedisUtil.getNewsKey(), String.valueOf(news.getId()),
-					RedisHelper.getZsetScore(news.getPriority(), autoId));
 		} catch (Exception e) {
 			logger.error("添加新闻报错",e);
 		}
@@ -71,7 +64,7 @@ public class NewsService {
 			//set to redis
 			stringRedisTemplate.opsForValue().set(RedisUtil.getNewsDetailKey(news.getId()), gson.toJson(news));
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error("update新闻报错",e);
 		}
 	}
 
@@ -102,7 +95,13 @@ public class NewsService {
 		try{
 			newsDao.updateNews(news);
 			//set to redis
-			stringRedisTemplate.opsForValue().set(RedisUtil.getNewsDetailKey(news.getId()), gson.toJson(news));
+			if(news.getPublishDate() != null) {
+				stringRedisTemplate.opsForValue().set(RedisUtil.getNewsDetailKey(news.getId()), gson.toJson(news));
+				stringRedisTemplate.opsForZSet().add(RedisUtil.getNewsKey(), String.valueOf(news.getId()), news.getPriority() * 1.0);
+			}else{
+				stringRedisTemplate.delete(RedisUtil.getNewsDetailKey(news.getId()));
+				stringRedisTemplate.opsForZSet().remove(RedisUtil.getNewsKey(), String.valueOf(news.getId()));
+			}
 			return true;
 		}catch(Exception e){
 			logger.error("删除新闻报错",e);

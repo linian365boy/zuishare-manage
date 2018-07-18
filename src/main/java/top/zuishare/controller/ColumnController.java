@@ -78,9 +78,6 @@ public class ColumnController {
 		if(firstColumnId==0){
 			firstColumnId = null;
 		}
-		if(null==column.getPriority()){
-			column.setPriority(0);
-		}
 		column.setCreateDate(new Date());
 		if(secondColumnId!=null){
 			column.setParentId(secondColumnId);

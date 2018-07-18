@@ -149,9 +149,6 @@ public class ProductController {
 				}else{
 					product.setCategoryId(Integer.parseInt(categoryId));
 				}
-				if(product.getPriority()==null){
-					product.setPriority(0);
-				}
 				product.setPublish(false);
 				product.setCreateDate(tempProduct.getCreateDate());
 				product.setCreateUserId(tempProduct.getCreateUserId());
@@ -209,9 +206,6 @@ public class ProductController {
 			product.setCreateDate(new Date());
 			product.setCreateUserId(u.getId());
 			product.setUrl(Tools.getRndFilename()+".htm");
-			if(product.getPriority()==null){
-				product.setPriority(0);
-			}
 			productService.saveProduct(product);
 			sb.append("名称："+product.getEnName());
 			logUtil.log(LogType.ADD, sb.toString());

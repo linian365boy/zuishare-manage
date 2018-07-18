@@ -1,19 +1,16 @@
 package top.zuishare.service;
 
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-
-import com.google.gson.Gson;
-
 import top.zuishare.dao.ProductDao;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Product;
 import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.PageRainier;
-import top.zuishare.util.RedisHelper;
 
 import java.util.List;
 
@@ -41,10 +38,10 @@ public class ProductService {
 	public void saveProduct(Product product) {
 		productDao.save(product);
 		//set to redis
-		stringRedisTemplate.opsForValue().set(RedisUtil.getProductDetailKey(product.getId()), gson.toJson(product));
-		long autoId = stringRedisTemplate.opsForValue().increment(RedisUtil.getGenerateIncreaseKey(), 1);
-		stringRedisTemplate.opsForZSet().add(RedisUtil.getProductsKey(), String.valueOf(product.getId()),
-				RedisHelper.getZsetScore(product.getPriority(), autoId));
+		//stringRedisTemplate.opsForValue().set(RedisUtil.getProductDetailKey(product.getId()), gson.toJson(product));
+		//stringRedisTemplate.opsForZSet().add(RedisUtil.getProductsKey(),
+		//		String.valueOf(product.getId()),
+		//		product.getPriority());
 	}
 
 	public boolean delProduct(Integer productId) {
@@ -127,8 +124,18 @@ public class ProductService {
 		boolean flag = true;
 		try{
 			productDao.updateStatus(id,status);
-			//set to redis
-			stringRedisTemplate.opsForValue().set(RedisUtil.getProductDetailKey(id), gson.toJson(productDao.findOne(id)));
+			Product product = productDao.findOne(id);
+			if(status && product.isPublish()) {
+				//true
+				//set to redis
+				stringRedisTemplate.opsForValue().set(RedisUtil.getProductDetailKey(id), gson.toJson(product));
+				stringRedisTemplate.opsForZSet().add(RedisUtil.getProductsKey(), String.valueOf(id),
+						product.getPriority());
+			}else{
+				//false lock
+				stringRedisTemplate.delete(RedisUtil.getProductDetailKey(id));
+				stringRedisTemplate.opsForZSet().remove(RedisUtil.getProductsKey(), String.valueOf(id));
+			}
 		}catch(Exception e){
 			logger.error("修改产品的状态失败！",e);
 			flag = false;
@@ -190,8 +197,13 @@ public class ProductService {
 
 	public void updateProduct(Product product) {
 		productDao.updateProduct(product);
-		stringRedisTemplate.opsForValue().set(RedisUtil.getProductDetailKey(product.getId()), gson.toJson(product));
-		
+		if(product.isPublish() && product.isStatus()) {
+			stringRedisTemplate.opsForValue().set(RedisUtil.getProductDetailKey(product.getId()), gson.toJson(product));
+			stringRedisTemplate.opsForZSet().add(RedisUtil.getProductsKey(), String.valueOf(product.getId()), product.getPriority());
+		}else{
+			stringRedisTemplate.delete(RedisUtil.getProductDetailKey(product.getId()));
+			stringRedisTemplate.opsForZSet().remove(RedisUtil.getProductsKey(), String.valueOf(product.getId()));
+		}
 	}
 
 	/*private Specification<Product> findAllReleaseProductByLikeKeywordSpec(final String keyword) {

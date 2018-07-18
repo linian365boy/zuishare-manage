@@ -76,9 +76,6 @@ public class AdvertisementController {
 			if(StringUtils.isBlank(ad.getUrl())){
 				ad.setUrl("javascript:void();");
 			}
-			if(null==ad.getPriority()){
-				ad.setPriority(0);
-			}
 			ad.setStatus(Constant.C_ONE);
 			ad.setCreateDate(new Date());
 			service.saveAdvertisement(ad);

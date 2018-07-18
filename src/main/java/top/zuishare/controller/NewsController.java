@@ -70,9 +70,6 @@ public class NewsController {
 	public MessageVo add(News news, Integer firstColId, Integer secondColId, Integer thirdColId){
         logger.info("add news firstColId => {}, secondColId => {}, thirdColId => {}", firstColId, secondColId, thirdColId);
 		MessageVo vo = null;
-		if(news.getPriority()==null){
-			news.setPriority(0);
-		}
 		news.setClicks(0);
 		news.setCreateDate(new Date());
 		news.setUrl(Tools.getRndFilename()+".htm");
@@ -141,7 +138,7 @@ public class NewsController {
 				if(!temp.getTitle().equals(news.getTitle())){
 					content.append("标题由\""+temp.getTitle()+"\"修改为\""+news.getTitle()+"\"");
 				}
-				if(!temp.getPriority().equals(news.getPriority())){
+				if(temp.getPriority() != news.getPriority()){
 					content.append("优先值由\""+temp.getPriority()+"\"修改为\""+news.getPriority()+"\"");
 				}
 				if("".equals(content.toString().trim())){
