@@ -94,7 +94,7 @@
 			<div class="form-group">
 			    <label for="keyWords" class="col-sm-2 control-label">关键字</label>
 			    <div class="col-sm-8">
-			      <input type="text" class="form-control" id="keyWords" value="${news.keyWords }" name="keyWords" placeholder="关键字（多个以英文;隔开）">
+			      <input type="text" class="form-control" id="keyWords" value="${news.keyWords }" name="keyWords" placeholder="关键字（多个以英文,隔开）">
 			    </div>
 		   </div>
 		   

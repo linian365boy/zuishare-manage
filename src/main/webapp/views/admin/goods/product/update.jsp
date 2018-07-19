@@ -194,7 +194,7 @@ $(document).ready(function(){
 			  <div class="form-group">
 			    <label for="keyWords" class="col-sm-2 control-label">关键字</label>
 			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="keyWords" value="${model.keyWords }" name="keyWords" placeholder="商品关键字(以英文分号隔开不同的关键字)">
+			      <input type="text" class="form-control" id="keyWords" value="${model.keyWords }" name="keyWords" placeholder="商品关键字（多个以英文,隔开）">
 			    </div>
 			  </div>
 			  <div class="form-group">

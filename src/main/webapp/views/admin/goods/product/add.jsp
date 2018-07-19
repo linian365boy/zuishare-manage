@@ -158,7 +158,7 @@
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="keyWords">关键字</label>
                       <div class="col-sm-10">
-                        <input type="text" placeholder="关键字" name="keyWords" id="keyWords" class="form-control">
+                        <input type="text" placeholder="关键字（多个以英文,隔开）" name="keyWords" id="keyWords" class="form-control">
                       </div>
                     </div>
                     <div class="form-group">
