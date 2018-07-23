@@ -8,20 +8,22 @@
 		<result property="url" column="url" jdbcType="VARCHAR"/>	
 		<result property="createDate" column="createDate" jdbcType="DATE"/>	
 		<result property="publishDate" column="publishDate" jdbcType="DATE"/>	
-		<result property="columnName" column="columnName" jdbcType="VARCHAR"/>	
+		<result property="columnName" column="columnName" jdbcType="VARCHAR"/>
+		<result property="clicks" column="clicks" jdbcType="INTEGER"/>
 	</resultMap>
 	
 	<update id="updateClicks">
 		update News set clicks = #{clicks} where id = #{newsId}
 	</update>
 	<insert id="save" parameterType="News" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-		insert into tb_news(id,title,introduce,content,priority,url,createDate,publishDate,clicks,keyWords,columnId,type,depth,bref)
-		values(null,#{title},#{introduce},#{content},#{priority},#{url},#{createDate},#{publishDate},#{clicks},#{keyWords},#{columnId},#{type},#{depth},#{bref})
+		insert into tb_news(id,title,introduce,content,priority,url,createDate,publishDate,clicks,keyWords,columnId,type,depth,bref,imgTitlePath)
+		values(null,#{title},#{introduce},#{content},#{priority},#{url},#{createDate},#{publishDate},
+		#{clicks},#{keyWords},#{columnId},#{type},#{depth},#{bref},#{imgTitlePath})
 	</insert>
 	
 	<update id="updateNews">
 		update tb_news set title=#{title},introduce=#{introduce},content=#{content},priority=#{priority},
-		url=#{url},keyWords=#{keyWords},type=#{type},depth=#{depth},bref=#{bref},publishDate=#{publishDate} where id=#{id}
+		url=#{url},keyWords=#{keyWords},type=#{type},depth=#{depth},bref=#{bref},publishDate=#{publishDate},imgTitlePath=#{imgTitlePath} where id=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="int">
@@ -41,7 +43,7 @@
 	</select>
 	
 	<select id="findList" resultMap="NewsMap" parameterType="top.zuishare.spi.dto.request.RequestParam">
-		select tn.id,tn.title,tn.priority,tn.url,tn.createDate,tn.publishDate
+		select tn.id,tn.title,tn.priority,tn.url,tn.createDate,tn.publishDate,imgTitlePath,clicks
 		from tb_news tn
 		<where>
 			<if test="search!=null and search!=''">
@@ -49,6 +51,11 @@
 			</if>
 		</where> 
 		order by tn.priority desc,tn.id desc limit #{offset},#{limit}
+	</select>
+
+	<select id="findAllPublishNews" resultType="News">
+		select id,clicks,title,publishDate,keyWords,priority,imgTitlePath from tb_news where publishDate is not null
+		order by priority desc, id desc
 	</select>
 	
 	<select id="findIndexNews" resultType="News">
@@ -62,4 +69,12 @@
 	<select id="countByColId" parameterType="long">
 		select count(*) from tb_news where columnId=#{colId} and publishDate is not null
 	</select>
+
+	<update id="updateViewNum">
+		update tb_news
+		<set>
+			clicks=#{viewNum}
+		</set>
+		where id=#{newsId}
+	</update>
 </mapper>

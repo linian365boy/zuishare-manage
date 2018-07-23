@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import top.zuishare.dao.ArticleDao;
+import top.zuishare.dao.NewsDao;
 import top.zuishare.service.ArticleViewNumToDB;
+import top.zuishare.service.NewsClicksToDB;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +26,8 @@ public class ScheduleUtil {
     private final static Logger logger = LoggerFactory.getLogger(ScheduleUtil.class);
     private static ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
     private static ExecutorService executorService = Executors.newFixedThreadPool(1);
-    private static ArticleViewNumToDB articleViewNumToDB;
+    //private static ArticleViewNumToDB articleViewNumToDB;
+    private static NewsClicksToDB newsClicksToDB;
 
     /**
      * 以固定周期频率执行任务
@@ -54,17 +57,17 @@ public class ScheduleUtil {
     /**
      * 应用启动，执行消费redis队列任务
      * @param stringRedisTemplate
-     * @param articleDao
+     * @param newsDao
      * @param gson
      */
-    public static void executeArticleViewNumTask(StringRedisTemplate stringRedisTemplate, ArticleDao articleDao, Gson gson){
-        articleViewNumToDB = new ArticleViewNumToDB(stringRedisTemplate,articleDao,gson);
-        executorService.execute(articleViewNumToDB);
+    public static void executeArticleViewNumTask(StringRedisTemplate stringRedisTemplate, NewsDao newsDao, Gson gson){
+        newsClicksToDB = new NewsClicksToDB(stringRedisTemplate,newsDao,gson);
+        executorService.execute(newsClicksToDB);
     }
 
     public static void closeResource(){
-        if(articleViewNumToDB != null){
-            articleViewNumToDB.setRunning(false);
+        if(newsClicksToDB != null){
+            newsClicksToDB.setRunning(false);
         }
         if(scheduledExecutorService != null){
             scheduledExecutorService.shutdown();

@@ -91,4 +91,8 @@
 		</where>
 		order by priority desc,hot desc,id desc
 	</select>
+
+	<select id="findAllPublishProducts" resultType="Product">
+		select id,enName,hot,picUrl,priority from tb_product where status is true and publish is true order by priority desc, id desc
+	</select>
 </mapper>

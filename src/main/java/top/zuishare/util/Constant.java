@@ -177,5 +177,9 @@ public class Constant {
 	 * 新闻图片上传的目录前缀
 	 */
 	public static final String NEWS_PIC_PRE = "news";
+	/**
+	 * 默认新闻标题图片
+	 */
+	public static final String DEFAULT_NEWS_PIC_TITLE = "/resources/images/defaultImgTitle.jpg";
 
 }

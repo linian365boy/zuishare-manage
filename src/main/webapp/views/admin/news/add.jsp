@@ -85,6 +85,13 @@
 			      <input type="text" class="form-control" id="title" name="title" placeholder="标题">
 			    </div>
 		   </div>
+		   <div class="form-group imgTitle">
+             <label class="col-sm-2 control-label" for="photo">标题图片</label>
+             <div class="col-sm-10">
+               <input type="file" name="photo" id="photo" accept="image/*"/>
+               <p class="text-info">未选择将使用<a href="${ctx }/resources/images/defaultImgTitle.jpg" target="_blank">默认图片</a>（200px * 140px）</p>
+             </div>
+           </div>
 		   <div class="form-group">
 					<label for="introduce" class="col-sm-2 control-label">摘要</label>
 					<div class="col-sm-8">

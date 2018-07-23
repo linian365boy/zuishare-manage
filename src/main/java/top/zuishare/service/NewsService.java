@@ -4,15 +4,18 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 import top.zuishare.dao.NewsDao;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.News;
+import top.zuishare.spi.model.Product;
 import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.PageRainier;
 
-import java.util.List;
+import java.util.*;
 
 @Component("newsService")
 public class NewsService {
@@ -107,6 +110,21 @@ public class NewsService {
 			logger.error("删除新闻报错",e);
 		}
 		return false;
+	}
+
+	public void newsToRedis(){
+		List<News> news = newsDao.findAllPublishNews();
+		Map<String, String> keyValues = new HashMap<>(news.size());
+		Set<ZSetOperations.TypedTuple<String>> tuplesSet = new HashSet<>(news.size());
+		for (News n : news) {
+			if (n.getImgTitlePath() == null) {
+				n.setImgTitlePath("images/defaultImgTitle.jpg");
+			}
+			keyValues.put(RedisUtil.getNewsDetailKey(n.getId()), gson.toJson(n));
+			tuplesSet.add(new DefaultTypedTuple<>(String.valueOf(n.getId()), n.getPriority() * 1.0));
+		}
+		stringRedisTemplate.opsForValue().multiSet(keyValues);
+		stringRedisTemplate.opsForZSet().add(RedisUtil.getNewsKey(), tuplesSet);
 	}
 
 }

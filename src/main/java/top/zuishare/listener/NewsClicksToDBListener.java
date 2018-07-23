@@ -8,7 +8,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
 import top.zuishare.dao.ArticleDao;
+import top.zuishare.dao.NewsDao;
 import top.zuishare.util.ScheduleUtil;
 
 /**
@@ -18,15 +20,15 @@ import top.zuishare.util.ScheduleUtil;
  * @date: 2018/1/4 下午11:25
  * @since JDK 1.7
  */
-//@Component
-public class ArticleViewNumToDBListener implements ApplicationListener<ContextRefreshedEvent> {
+@Component
+public class NewsClicksToDBListener implements ApplicationListener<ContextRefreshedEvent> {
 
-    private static final Logger logger = LoggerFactory.getLogger(ArticleViewNumToDBListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(NewsClicksToDBListener.class);
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
-    private ArticleDao articleDao;
+    private NewsDao newsDao;
     @Autowired
     private Gson gson;
 
@@ -36,7 +38,7 @@ public class ArticleViewNumToDBListener implements ApplicationListener<ContextRe
         if (null == app.getParent() || null == app.getParent().getParent()){
             //启动执行任务执行
             logger.info("start article viewNum write to db task...");
-            //ScheduleUtil.executeArticleViewNumTask(stringRedisTemplate,articleDao,gson);
+            ScheduleUtil.executeArticleViewNumTask(stringRedisTemplate,newsDao,gson);
         }
     }
 }

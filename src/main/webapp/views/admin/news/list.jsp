@@ -81,6 +81,13 @@
 						'<a class="label label-danger ml10 remove" href="javascript:void(0)" title="删除">删除</a>'
 				    ].join('');
 		}
+
+		var pathFormatter = function(value, row, index){
+		            if (!row.imgTitlePath){
+                        row.imgTitlePath = "${ctx }/resources/images/defaultImgTitle.jpg";
+		            }
+                    return "<img src='"+row.imgTitlePath+"' width='100px' height='70px'/>";
+        		};
 		
 		window.newsActionEvents = {
 				'click .publish':function(e, value, row, index){
@@ -137,6 +144,8 @@
                 <tr> 
     				<th data-formatter="runningFormatter">序号</th>
 					<th data-field="title">新闻标题</th>
+					<th data-field="imgTitlePath" data-formatter="pathFormatter">标题图片</th>
+					<th data-field="clicks">点击量</th>
 					<th data-field="createDate">创建日期</th>
 					<th data-formatter="publishDateFormatter">发布日期</th>
 					<th data-field="priority">优先值</th>

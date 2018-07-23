@@ -133,11 +133,23 @@
 					    </div>
 				   </div>
 				   <div class="form-group">
-					    <label for="telPhone" class="col-sm-2 control-label">联系方式<code>*</code></label>
+                        <label for="secondEmail" class="col-sm-2 control-label">子联系人邮箱</label>
+                        <div class="col-sm-8">
+                          <input id="secondEmail" class="form-control" name="secondEmail" value="${model.secondEmail }"/>
+                        </div>
+                   </div>
+				   <div class="form-group">
+					    <label for="telPhone" class="col-sm-2 control-label">手机<code>*</code></label>
 					    <div class="col-sm-8">
 					      <input id="telPhone" class="form-control" name="telPhone" value="${model.telPhone }"/>
 					    </div>
 				   </div>
+				   <div class="form-group">
+                        <label for="secondTelPhone" class="col-sm-2 control-label">子联系人手机</label>
+                        <div class="col-sm-8">
+                          <input id="secondTelPhone" class="form-control" name="secondTelPhone" value="${model.secondTelPhone }"/>
+                        </div>
+                   </div>
 				   <div class="form-group">
 					    <label for="website" class="col-sm-2 control-label">公司网址</label>
 					    <div class="col-sm-8">
@@ -174,6 +186,12 @@
 					      <input id="contactUserinstagram" class="form-control" name="contactUserinstagram" value="${model.contactUserinstagram }"/>
 					    </div>
 				   </div>
+				   <div class="form-group">
+                        <label for="contactUserSkype" class="col-sm-2 control-label">联系人Skype</label>
+                        <div class="col-sm-8">
+                          <input id="contactUserSkype" class="form-control" name="contactUserSkype" value="${model.contactUserSkype }"/>
+                        </div>
+                   </div>
 				   <div class="form-group">
 					    <label for="introduce" class="col-sm-2 control-label">公司介绍</label>
 					    <div class="col-sm-8">

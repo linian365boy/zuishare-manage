@@ -1,5 +1,6 @@
 package top.zuishare.controller;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.jsoup.Jsoup;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import top.zuishare.service.ColumnService;
 import top.zuishare.service.NewsService;
 import top.zuishare.service.SystemConfig;
@@ -67,9 +69,22 @@ public class NewsController {
 	
 	@ResponseBody
 	@RequestMapping(value="/add",method= RequestMethod.POST)
-	public MessageVo add(News news, Integer firstColId, Integer secondColId, Integer thirdColId){
-        logger.info("add news firstColId => {}, secondColId => {}, thirdColId => {}", firstColId, secondColId, thirdColId);
+	public MessageVo add(MultipartFile photo, News news, Integer firstColId, Integer secondColId, Integer thirdColId) {
+		logger.info("add news firstColId => {}, secondColId => {}, thirdColId => {}, photo => {}", firstColId, secondColId, thirdColId, photo);
 		MessageVo vo = null;
+		try{
+			if (photo != null && !photo.isEmpty()) {
+				//picPath前面的file:不需要
+				String realPath = systemConfig.getPicPath().substring(5) + Constant.ARTICLE_PIC_TITLE_PRE;
+				String newFileName = realPath + File.separator + Tools.getRndFilename() + Tools.getExtname(photo.getOriginalFilename());
+				FileUtils.copyInputStreamToFile(photo.getInputStream(), new File(newFileName));
+				String url = newFileName.substring(realPath.lastIndexOf(Constant.UPLOAD_PRE));
+				news.setImgTitlePath(url);
+			}
+		}catch (Exception e){
+			logger.error("upload news image title error.", e);
+			news.setImgTitlePath(Constant.DEFAULT_NEWS_PIC_TITLE);
+		}
 		news.setClicks(0);
 		news.setCreateDate(new Date());
 		news.setUrl(Tools.getRndFilename()+".htm");
@@ -106,53 +121,76 @@ public class NewsController {
 	
 	@RequestMapping(value="/{newsId}/update",method= RequestMethod.GET)
 	public String update(@PathVariable Integer newsId, ModelMap map){
-		map.put("news", newsService.loadNews(newsId));
+		News news = newsService.loadNews(newsId);
+		if (news.getImgTitlePath() == null ){
+			news.setImgTitlePath("/resources/images/defaultImgTitle.jpg");
+		}
+		map.put("news", news);
 		return "admin/news/update";
 	}
 	
 	@ResponseBody
 	@RequestMapping(value="/{newsId}/update",method= RequestMethod.POST)
-	public MessageVo update(HttpServletRequest request,
+	public MessageVo update(MultipartFile photo, HttpServletRequest request,
                             @PathVariable Integer newsId, News news){
-        logger.info("update news news => {}", news);
+        logger.info("update news data => {}, photo => {}", news, photo);
 		MessageVo vo = null;
-		if(newsId!=null){
-			StringBuilder content = new StringBuilder();
-			News temp = newsService.loadNews(newsId);
-			news.setCreateDate(temp.getCreateDate());
-			news.setClicks(temp.getClicks());
-			news.setUrl(temp.getUrl());
-			news.setPublishDate(temp.getPublishDate());
-			String bref = Jsoup.parse(news.getContent()).text();
-	        if(StringUtils.isNotBlank(bref)) {
-	            if(bref.length() > systemConfig.getLimitSize()) {
-	            	news.setBref(bref.substring(0, systemConfig.getLimitSize()));
-	            }else{
-	            	news.setBref(bref);
-	            }
-	        }else{
-	        	news.setBref(news.getContent());
-	        }
-			if(newsService.updateNews(news)){
-				logger.info("update from news => {}, to => {}", temp, news);
-				if(!temp.getTitle().equals(news.getTitle())){
-					content.append("标题由\""+temp.getTitle()+"\"修改为\""+news.getTitle()+"\"");
+		News temp = newsService.loadNews(newsId);
+		try{
+			if (photo != null && !photo.isEmpty()) {
+				//picPath前面的file:不需要
+				String realPath = systemConfig.getPicPath().substring(5) + Constant.ARTICLE_PIC_TITLE_PRE;
+				String newFileName = realPath + File.separator + Tools.getRndFilename() + Tools.getExtname(photo.getOriginalFilename());
+				FileUtils.copyInputStreamToFile(photo.getInputStream(), new File(newFileName));
+				String url = newFileName.substring(realPath.lastIndexOf(Constant.UPLOAD_PRE));
+				news.setImgTitlePath(url);
+				//old image delete
+				if(temp.getImgTitlePath()!= null && !temp.getImgTitlePath().equals(Constant.DEFAULT_NEWS_PIC_TITLE)) {
+					FileUtil.delFile(realPath + temp.getImgTitlePath().substring(Constant.UPLOAD_ARTICLE_PIC_TITLE.length()));
 				}
-				if(temp.getPriority() != news.getPriority()){
-					content.append("优先值由\""+temp.getPriority()+"\"修改为\""+news.getPriority()+"\"");
-				}
-				if("".equals(content.toString().trim())){
-					content.append("修改了标题为"+news.getTitle()+"新闻");
-				}
-				logUtil.log(LogType.EDIT, content.toString());
-				//删除页面
-				String path = request.getSession().getServletContext().getRealPath("/");
-				Tools.delFile(path + Constant.NEWSPATH + File.separator+news.getUrl());
-				Tools.delFile(path + Constant.NEWSPRE + File.separator+news.getId()+".htm");
-				vo = new MessageVo(Constant.SUCCESS_CODE,"修改新闻【"+news.getTitle()+"】成功");
-			}else{
-				vo = new MessageVo(Constant.ERROR_CODE,"修改新闻【"+news.getTitle()+"】失败");
+			}else {
+				news.setImgTitlePath(temp.getImgTitlePath());
 			}
+		}catch (Exception e){
+			logger.error("upload news image title error.", e);
+			news.setImgTitlePath(Constant.DEFAULT_NEWS_PIC_TITLE);
+		}
+
+		StringBuilder content = new StringBuilder();
+		news.setCreateDate(temp.getCreateDate());
+		news.setClicks(temp.getClicks());
+		news.setUrl(temp.getUrl());
+		news.setPublishDate(temp.getPublishDate());
+
+		String bref = Jsoup.parse(news.getContent()).text();
+		if(StringUtils.isNotBlank(bref)) {
+			if(bref.length() > systemConfig.getLimitSize()) {
+				news.setBref(bref.substring(0, systemConfig.getLimitSize()));
+			}else{
+				news.setBref(bref);
+			}
+		}else{
+			news.setBref(news.getContent());
+		}
+		if(newsService.updateNews(news)){
+			logger.info("update from news => {}, to => {}", temp, news);
+			if(!temp.getTitle().equals(news.getTitle())){
+				content.append("标题由\""+temp.getTitle()+"\"修改为\""+news.getTitle()+"\"");
+			}
+			if(temp.getPriority() != news.getPriority()){
+				content.append("优先值由\""+temp.getPriority()+"\"修改为\""+news.getPriority()+"\"");
+			}
+			if("".equals(content.toString().trim())){
+				content.append("修改了标题为"+news.getTitle()+"新闻");
+			}
+			logUtil.log(LogType.EDIT, content.toString());
+			//删除页面
+			String path = request.getSession().getServletContext().getRealPath("/");
+			Tools.delFile(path + Constant.NEWSPATH + File.separator+news.getUrl());
+			Tools.delFile(path + Constant.NEWSPRE + File.separator+news.getId()+".htm");
+			vo = new MessageVo(Constant.SUCCESS_CODE,"修改新闻【"+news.getTitle()+"】成功");
+		}else{
+			vo = new MessageVo(Constant.ERROR_CODE,"修改新闻【"+news.getTitle()+"】失败");
 		}
         logger.info("update news return data => {}", vo);
 		return vo;
@@ -234,4 +272,22 @@ public class NewsController {
         logger.info("release news return data => {}", vo);
 		return vo;
 	}
+
+	/**
+	 * 一键把所有发布且正常的新闻放入detail redis，并且也放入zset，按照顺序
+	 * @return
+	 */
+	@RequestMapping(value = "/newsToRedis", method = RequestMethod.GET)
+	@ResponseBody
+	public String productToRedis() {
+		long start = System.currentTimeMillis();
+		try {
+			newsService.newsToRedis();
+		}catch (Exception e){
+			return "Fail";
+		}
+		logger.info("news to redis cost time => {} ms", System.currentTimeMillis() - start);
+		return "Success";
+	}
+
 }

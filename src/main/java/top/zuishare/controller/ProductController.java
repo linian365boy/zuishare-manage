@@ -294,7 +294,7 @@ public class ProductController {
 
 	@RequestMapping(value="/{productId}/checkPub",method= RequestMethod.GET)
 	@ResponseBody
-	private String checkPub(@PathVariable Integer productId) {
+	public String checkPub(@PathVariable Integer productId) {
 		if(productId!=null){
 			Product product = productService.loadProductById(productId);
 			if(product!=null && product.isPublish() && 
@@ -306,5 +306,22 @@ public class ProductController {
 		}else{
 			return "0";
 		}
+	}
+
+	/**
+	 * 一键把所有发布且正常的产品放入detail redis，并且也放入zset，按照顺序
+	 * @return
+	 */
+	@RequestMapping(value = "/productToRedis", method = RequestMethod.GET)
+	@ResponseBody
+	public String productToRedis() {
+		long start = System.currentTimeMillis();
+		try {
+			productService.productToRedis();
+		}catch (Exception e){
+			return "Fail";
+		}
+		logger.info("product to redis cost time => {} ms", System.currentTimeMillis() - start);
+		return "Success";
 	}
 }

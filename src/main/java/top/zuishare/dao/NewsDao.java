@@ -1,6 +1,7 @@
 package top.zuishare.dao;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.access.method.P;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.News;
 
@@ -31,4 +32,7 @@ public interface NewsDao {
 
 	public void updateNews(News news);
 
+	public List<News> findAllPublishNews();
+
+	public void updateViewNum(@Param("newsId") int newsId,@Param("viewNum") int viewNum);
 }
