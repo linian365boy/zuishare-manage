@@ -55,7 +55,7 @@
 	</select>
 
 	<select id="findAllPublishNews" resultType="News">
-		select id,clicks,title,publishDate,keyWords,priority,imgTitlePath,bref from tb_news where publishDate is not null
+		select id,clicks,title,publishDate,keyWords,priority,imgTitlePath,bref,content from tb_news where publishDate is not null
 		order by priority desc, id desc
 	</select>
 	

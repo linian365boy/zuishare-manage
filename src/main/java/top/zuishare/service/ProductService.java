@@ -235,4 +235,17 @@ public class ProductService {
 		stringRedisTemplate.opsForZSet().add(RedisUtil.getProductsKey(), tuplesSet);
 	}
 
+	/**
+	 *  need update product
+	 * @param product
+	 * @param oldCategoryId
+	 */
+	public void updateCategoryProductsCache(Product product, int oldCategoryId){
+		// old category redis cache remove
+		stringRedisTemplate.opsForZSet().remove(RedisUtil.getCateProductKey(oldCategoryId), String.valueOf(product.getId()));
+		// new category add redis
+		stringRedisTemplate.opsForZSet().add(RedisUtil.getCateProductKey(product.getCategoryId()),
+				String.valueOf(product.getId()), product.getPriority());
+	}
+
 }

@@ -279,11 +279,12 @@ public class NewsController {
 	 */
 	@RequestMapping(value = "/newsToRedis", method = RequestMethod.GET)
 	@ResponseBody
-	public String productToRedis() {
+	public String newsToRedis() {
 		long start = System.currentTimeMillis();
 		try {
 			newsService.newsToRedis();
 		}catch (Exception e){
+			logger.error("newsToRedis fail", e);
 			return "Fail";
 		}
 		logger.info("news to redis cost time => {} ms", System.currentTimeMillis() - start);

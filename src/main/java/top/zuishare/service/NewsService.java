@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ public class NewsService {
     private StringRedisTemplate stringRedisTemplate;
 	@Autowired
     private Gson gson;
+	@Autowired
+	private SystemConfig systemConfig;
 	private static Logger logger = LoggerFactory.getLogger(NewsService.class);
 	
 	public PageRainier<News> findAll(RequestParam param) {
@@ -122,8 +126,20 @@ public class NewsService {
 		Map<String, String> keyValues = new HashMap<>(news.size());
 		Set<ZSetOperations.TypedTuple<String>> tuplesSet = new HashSet<>(news.size());
 		for (News n : news) {
-			if (n.getImgTitlePath() == null) {
+			if(n.getImgTitlePath() == null) {
 				n.setImgTitlePath("images/defaultImgTitle.jpg");
+			}
+			if(StringUtils.isBlank(n.getBref())){
+				String bref = Jsoup.parse(n.getContent()).text();
+				if(StringUtils.isNotBlank(bref)) {
+					if(bref.length() > systemConfig.getLimitSize()) {
+						n.setBref(bref.substring(0, systemConfig.getLimitSize()));
+					}else{
+						n.setBref(bref);
+					}
+				}else{
+					n.setBref(n.getContent());
+				}
 			}
 			keyValues.put(RedisUtil.getNewsDetailKey(n.getId()), gson.toJson(n));
 			tuplesSet.add(new DefaultTypedTuple<>(String.valueOf(n.getId()), n.getPriority() * 1.0));

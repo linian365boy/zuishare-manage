@@ -157,6 +157,11 @@ public class ProductController {
 				}
 				product.setStatus(tempProduct.isStatus());
 				productService.updateProduct(product);
+				//category update, need modify category product redis cache
+				if(tempProduct.getCategoryId() != product.getCategoryId()) {
+					// update category product redis cache
+					productService.updateCategoryProductsCache(product, tempProduct.getCategoryId());
+				}
 				logger.info("update product to => {}", product);
 				logUtil.log(LogType.EDIT,content.toString());
 				//删除页面
@@ -319,6 +324,7 @@ public class ProductController {
 		try {
 			productService.productToRedis();
 		}catch (Exception e){
+			logger.error("productToRedis fail", e);
 			return "Fail";
 		}
 		logger.info("product to redis cost time => {} ms", System.currentTimeMillis() - start);
