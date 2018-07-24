@@ -58,6 +58,8 @@ public class CategoryService {
 		categoryDao.delete(categoryId);
 		// delete redis
 		stringRedisTemplate.delete(RedisUtil.getProductCatesKey());
+		// delete category product
+		stringRedisTemplate.delete(RedisUtil.getCateProductKey(categoryId));
 	}
 
 	public boolean checkHasChildren(Integer cateId) {
