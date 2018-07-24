@@ -1,6 +1,5 @@
 package top.zuishare.listener;
 
-import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-import top.zuishare.dao.ArticleDao;
+
+import com.google.gson.Gson;
+
 import top.zuishare.dao.NewsDao;
 import top.zuishare.util.ScheduleUtil;
 

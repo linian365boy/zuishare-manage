@@ -8,8 +8,9 @@
 		<result property="url" column="url" jdbcType="VARCHAR"/>	
 		<result property="createDate" column="createDate" jdbcType="DATE"/>	
 		<result property="publishDate" column="publishDate" jdbcType="DATE"/>	
-		<result property="columnName" column="columnName" jdbcType="VARCHAR"/>
 		<result property="clicks" column="clicks" jdbcType="INTEGER"/>
+		<result property="imgTitlePath" column="imgTitlePath" jdbcType="VARCHAR"/>
+		<result property="bref" column="bref" jdbcType="VARCHAR"/>
 	</resultMap>
 	
 	<update id="updateClicks">
@@ -43,7 +44,7 @@
 	</select>
 	
 	<select id="findList" resultMap="NewsMap" parameterType="top.zuishare.spi.dto.request.RequestParam">
-		select tn.id,tn.title,tn.priority,tn.url,tn.createDate,tn.publishDate,imgTitlePath,clicks
+		select tn.id,tn.title,tn.priority,tn.url,tn.createDate,tn.publishDate,imgTitlePath,clicks,bref 
 		from tb_news tn
 		<where>
 			<if test="search!=null and search!=''">
@@ -54,7 +55,7 @@
 	</select>
 
 	<select id="findAllPublishNews" resultType="News">
-		select id,clicks,title,publishDate,keyWords,priority,imgTitlePath from tb_news where publishDate is not null
+		select id,clicks,title,publishDate,keyWords,priority,imgTitlePath,bref from tb_news where publishDate is not null
 		order by priority desc, id desc
 	</select>
 	

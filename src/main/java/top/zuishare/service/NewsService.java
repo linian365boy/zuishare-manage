@@ -1,6 +1,11 @@
 package top.zuishare.service;
 
-import com.google.gson.Gson;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,14 +13,14 @@ import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
+
+import com.google.gson.Gson;
+
 import top.zuishare.dao.NewsDao;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.News;
-import top.zuishare.spi.model.Product;
 import top.zuishare.spi.util.RedisUtil;
 import top.zuishare.util.PageRainier;
-
-import java.util.*;
 
 @Component("newsService")
 public class NewsService {

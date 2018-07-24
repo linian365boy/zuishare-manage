@@ -1,6 +1,10 @@
 package top.zuishare.controller;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,23 +17,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import top.zuishare.model.User;
 import top.zuishare.service.CategoryService;
-import top.zuishare.service.ColumnService;
 import top.zuishare.service.ProductService;
 import top.zuishare.spi.dto.LogType;
 import top.zuishare.spi.dto.request.RequestParam;
 import top.zuishare.spi.model.Category;
-import top.zuishare.spi.model.Column;
 import top.zuishare.util.Constant;
 import top.zuishare.util.LogUtil;
 import top.zuishare.util.PageRainier;
 import top.zuishare.vo.MessageVo;
 import top.zuishare.vo.ReturnData;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin/goods/category")
@@ -37,8 +36,6 @@ import java.util.List;
 public class CategoryController {
 	@Autowired
 	private CategoryService categoryService;
-	@Autowired
-	private ColumnService columnService;
 	@Autowired
 	private ProductService productService;
     @Autowired

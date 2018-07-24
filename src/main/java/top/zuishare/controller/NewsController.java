@@ -1,5 +1,10 @@
 package top.zuishare.controller;
 
+import java.io.File;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -16,23 +21,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import top.zuishare.service.ColumnService;
+
 import top.zuishare.service.NewsService;
 import top.zuishare.service.SystemConfig;
 import top.zuishare.spi.dto.ConstantVariable;
 import top.zuishare.spi.dto.LogType;
 import top.zuishare.spi.dto.request.RequestParam;
-import top.zuishare.spi.model.Column;
 import top.zuishare.spi.model.News;
 import top.zuishare.spi.util.Tools;
-import top.zuishare.util.*;
+import top.zuishare.util.Constant;
+import top.zuishare.util.FileUtil;
+import top.zuishare.util.LogUtil;
+import top.zuishare.util.PageRainier;
 import top.zuishare.vo.MessageVo;
 import top.zuishare.vo.ReturnData;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.Date;
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin/news")
@@ -40,8 +42,6 @@ import java.util.List;
 public class NewsController {
 	@Autowired
 	private NewsService newsService;
-	@Autowired
-	private ColumnService columnService;
 	@Autowired
 	private SystemConfig systemConfig;
 	@Autowired
