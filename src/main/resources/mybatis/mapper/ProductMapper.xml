@@ -93,6 +93,8 @@
 	</select>
 
 	<select id="findAllPublishProducts" resultType="Product">
-		select id,enName,hot,picUrl,priority from tb_product where status is true and publish is true order by priority desc, id desc
+		select tp.id,tp.enName,tp.hot,tp.picUrl,tp.description,tp.introduce,tp.categoryId,tc.enName as categoryEnName 
+		from tb_product tp inner join tb_category tc on tp.categoryId = tc.id where tp.status is true and tp.publish is true 
+		order by tp.priority desc, tp.id desc
 	</select>
 </mapper>
