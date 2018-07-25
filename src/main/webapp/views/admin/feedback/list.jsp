@@ -22,11 +22,16 @@
 		}); 
 	}
 	
-		var del = function(obj){
-			var feedbackId = $(obj).attr("name");
+		var del = function(row){
 			art.dialog.confirm('确定删除此留言?',function(){
-				var url = '${ctx}/admin/feedback/'+feedbackId+'/del';
-				window.location.href=url;
+				var url = '${ctx}/admin/feedback/'+row.id+'/del';
+				$.getJSON(url,function(json){
+                		    		if(json.code==200){
+                		    			$("button[name='refresh']",window.document).click();
+                		    		}else{
+                		    			art.dialog.tips(json.message, 1.5);
+                		    		}
+                				});
 			});
 		};
 		var feedbackActionFormatter = function(value, row, index){
@@ -40,7 +45,7 @@
 			    	detail(row);
 			    },
 			    'click .remove': function (e, value, row, index) {
-			    	del(row.id);
+			    	del(row);
 			    }
 		};
 		$("#table").bootstrapTable();
@@ -87,22 +92,6 @@
 					<th data-formatter="feedbackActionFormatter" data-events="feedbackActionEvents">操作</th>
 				</tr> 
                 </thead>
-                <%-- <tbody>
-                <c:forEach items="${page.result }" var="feedback" varStatus="status">
-				<tr>
-					<td>${(page.currentPageIndex-1)*page.pageSize+status.index+1 }</td>
-					<td>${feedback.name }</td>
-					<td>${feedback.email }</td>
-					<td><fmt:formatDate value="${feedback.createTime }" type="both"/></td>
-					<td>
-						<input type="image" name="details" onclick="detail(${feedback.id });"
-						src="${ctx }resources/images/icn_alert_info.png" title="详情"/>
-						<input type="image" name="${feedback.id }" onclick="del(this);" 
-						src="${ctx }resources/images/icn_trash.png" title="删除"/>&nbsp;&nbsp;
-					</td>
-				</tr>
-				</c:forEach>
-                </tbody> --%>
               </table>
             </div>
             <!-- /.box-body -->
